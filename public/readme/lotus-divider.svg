@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 76" role="img" aria-labelledby="title">
+  <title id="title">A lotus between two botanical curls</title>
+  <g fill="none" stroke="#B57878" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M60 42H377M623 42H940" stroke-width=".8" opacity=".55"/>
+    <path d="M394 42C418 26 435 37 429 46C424 53 414 45 420 41M606 42C582 26 565 37 571 46C576 53 586 45 580 41M409 37C405 24 412 16 422 18C425 28 419 34 409 37ZM591 37C595 24 588 16 578 18C575 28 581 34 591 37Z" stroke-width="1.15"/>
+    <path d="M500 47C484 33 487 17 500 7C513 18 516 33 500 47ZM500 47C477 47 465 35 463 21C483 22 496 34 500 47ZM500 47C523 47 535 35 537 21C517 22 504 34 500 47ZM465 47Q480 61 500 54Q520 61 535 47M500 58V65" stroke-width="1.35"/>
+  </g>
+  <g fill="#B57878"><circle cx="449" cy="42" r="1.8"/><circle cx="551" cy="42" r="1.8"/><circle cx="500" cy="71" r="1.5"/></g>
+</svg>

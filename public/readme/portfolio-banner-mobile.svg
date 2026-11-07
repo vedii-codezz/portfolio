@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 440" role="img" aria-labelledby="title desc">
+  <title id="title">bedantika. Built to think. Made to feel.</title>
+  <desc id="desc">A mobile editorial cover in cream and wine plum, with an original lotus and a delicate floral border.</desc>
+  <rect width="700" height="440" rx="18" fill="#FFF1E9"/>
+  <g fill="none" stroke="#762937" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="18" y="18" width="664" height="404" rx="12" stroke-width="1" opacity=".45"/>
+    <path d="M55 27H645M27 55V385M55 413H645M673 55V385" stroke-width=".7" opacity=".3"/>
+    <path d="M34 66C34 48 54 49 54 37C54 29 42 30 45 37M34 66C51 69 66 55 65 44C52 45 41 55 34 66Z" stroke-width="1.3"/>
+    <path d="M666 374C666 392 646 391 646 403C646 411 658 410 655 403M666 374C649 371 634 385 635 396C648 395 659 385 666 374Z" stroke-width="1.3"/>
+  </g>
+  <g font-family="Georgia, 'Times New Roman', serif" fill="#762937">
+    <text x="48" y="77" font-size="21" letter-spacing="1.5">BEDANTIKA MONDAL / CREATIVE LAB</text>
+    <text x="41" y="193" font-size="113" letter-spacing="-6">bedantika.</text>
+    <text x="49" y="255" font-size="37" font-style="italic">Built to think. Made to feel.</text>
+    <text x="51" y="323" font-size="27" fill="#684049">Creative Development</text>
+    <text x="51" y="362" font-size="27" fill="#684049">× Artificial Intelligence</text>
+  </g>
+  <g transform="translate(558 356)" fill="none" stroke="#762937" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M0 0C-21-26-19-52 0-76C20-51 22-26 0 0Z" fill="#E5938F" stroke-width="1.5"/>
+    <path d="M0 0C-38-3-60-28-60-52C-30-49-8-26 0 0ZM0 0C38-3 60-28 60-52C30-49 8-26 0 0Z" fill="#FFD2BE" stroke-width="1.3"/>
+    <path d="M-70-20Q-48 15 0 8Q48 15 70-20M-49 20Q0 37 49 20M0-10V-63" stroke-width="1"/>
+    <circle cy="-88" r="2.3" fill="#762937" stroke="none"/>
+    <path d="M-93 17C-115 30-121 15-114 9C-105 3-101 17-108 17M73 7C88-3 90-18 83-25C72-18 69-6 73 7Z" stroke-width="1.2"/>
+  </g>
+</svg>
