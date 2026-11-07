@@ -13,7 +13,7 @@ function Lotus({ x, y, scale = 1 }: { x: number; y: number; scale?: number }) {
 
 function Drawing({ children, back = false, name }: OrnamentProps & { children: ReactNode; name: string }) {
   return <svg className={`toolkit-alpona alpona-${name}${back ? " toolkit-alpona-back" : ""}`}
-    viewBox="0 0 360 380" preserveAspectRatio={name === "border" ? "xMidYMid meet" : "xMidYMid slice"} aria-hidden="true" focusable="false"
+    viewBox={name === "border" ? undefined : "0 0 360 380"} preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"
     fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
     {children}
   </svg>;
@@ -64,16 +64,17 @@ export function RadialAlpona({ back = false }: OrnamentProps) {
 
 export function BorderAlpona({ back = false }: OrnamentProps) {
   return <Drawing name="border" back={back}>
-    <path strokeWidth=".85" d="M33 17 H327 Q343 17 343 33 V347 Q343 363 327 363 H33 Q17 363 17 347 V33 Q17 17 33 17 Z M36 23 H324 Q337 23 337 36 V344 Q337 357 324 357 H36 Q23 357 23 344 V36 Q23 23 36 23 Z" />
-    <g transform={back ? "translate(8 10) scale(.75)" : undefined}>
+    {/* The frame follows the card; local viewBoxes keep the original lotus paths undistorted. */}
+    {[17, 23].map(inset => <rect key={inset} x={inset} y={inset} rx={16 - (inset - 17) / 2} strokeWidth=".85" style={{ width: `calc(100% - ${inset * 2}px)`, height: `calc(100% - ${inset * 2}px)` }} />)}
+    <svg y="18" width="100" height="100" viewBox="0 0 100 100" overflow="visible"><g transform={back ? "translate(8 10) scale(.75)" : undefined}>
       <Lotus x={45} y={63} scale={.72} />
       <path d="M24 88 C40 86 30 65 47 64 C68 63 55 36 78 28 M46 64 C60 77 75 68 71 59 C66 52 60 58 64 62" />
-    </g>
-    <g transform={back ? "translate(352 370) rotate(180) scale(.75)" : "translate(360 380) rotate(180)"}>
+    </g></svg>
+    <svg x="100%" y="100%" width="100" height="100" viewBox="0 0 100 100" overflow="visible"><g transform={back ? "rotate(180) translate(8 10) scale(.75)" : "rotate(180)"}>
       <Lotus x={45} y={63} scale={.72} />
       <path d="M24 88 C40 86 30 65 47 64 C68 63 55 36 78 28 M46 64 C60 77 75 68 71 59 C66 52 60 58 64 62" />
-    </g>
-    {!back && <g><path d="M118 380 A62 44 0 0 1 242 380 M125 380 A55 37 0 0 1 235 380" /><Lotus x={180} y={378} scale={.85} /><Lotus x={145} y={379} scale={.45} /><Lotus x={215} y={379} scale={.45} /></g>}
+    </g></svg>
+    {!back && <svg x="50%" y="100%" width="140" height="64" viewBox="110 316 140 64" overflow="visible" style={{ transform: "translate(-70px, -64px)" }}><path d="M118 380 A62 44 0 0 1 242 380 M125 380 A55 37 0 0 1 235 380" /><Lotus x={180} y={378} scale={.85} /><Lotus x={145} y={379} scale={.45} /><Lotus x={215} y={379} scale={.45} /></svg>}
   </Drawing>;
 }
 

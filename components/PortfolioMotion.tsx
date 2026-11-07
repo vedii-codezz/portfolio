@@ -27,9 +27,10 @@ export function PortfolioMotion() {
           end: () => `clamp(bottom ${Math.round(Math.min(window.innerHeight * .3, 220))}px)`,
           invalidateOnRefresh: true, onUpdate: self => revealStory(self.progress), onRefresh: self => revealStory(self.progress),
         });
-        gsap.utils.toArray<HTMLElement>("[data-stack-category]").forEach((category, index) => {
-          gsap.timeline({ delay: index % 2 * .1, scrollTrigger: { trigger: category, start: "top 90%", once: true } })
-            .from(category, { y: 20, opacity: 0, duration: .6, ease: "power2.out", clearProps: "transform,opacity" });
+        gsap.from("[data-stack-category]", {
+          y: 20, opacity: 0, duration: .6, stagger: .08, ease: "power2.out",
+          clearProps: "transform,opacity",
+          scrollTrigger: { trigger: ".toolkit-flip-grid", start: "top 90%", once: true },
         });
         gsap.timeline({ scrollTrigger: { trigger: "#contact", start: "top 85%", once: true } })
           .from("#contact .section-eyebrow", { opacity: 0, duration: .6, clearProps: "opacity" }, 0)

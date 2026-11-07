@@ -24,7 +24,7 @@ export function TechStack() {
                 <TechStackAlpona variant={category.number} />
                 <div className="toolkit-flip-meta mono"><span>{category.number} / 04</span><span className="toolkit-flip-mark" aria-hidden="true">✳</span></div>
                 <h3 className="toolkit-flip-title">{category.title}</h3>
-                <p className="toolkit-flip-cue mono">CLICK TO EXPLORE <span aria-hidden="true">↗</span></p>
+                <p className="toolkit-flip-cue mono"><span className="toolkit-flip-cue-label">CLICK TO EXPLORE <span aria-hidden="true">↗</span></span></p>
               </div>}
               back={<div className="toolkit-flip-content toolkit-flip-back">
                 <TechStackAlpona variant={category.number} back />
@@ -33,7 +33,7 @@ export function TechStack() {
                 <ul className="toolkit-flip-technologies" aria-label={category.title}>
                   {category.technologies.map(technology => <li key={technology}><span>{technology}</span></li>)}
                 </ul>
-                <p className="toolkit-flip-cue mono">CLICK TO FLIP BACK <span aria-hidden="true">↶</span></p>
+                <p className="toolkit-flip-cue mono"><span className="toolkit-flip-cue-label">CLICK TO FLIP BACK <span aria-hidden="true">↶</span></span></p>
               </div>} />
           </article>
         ))}
