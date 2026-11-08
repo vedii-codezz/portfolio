@@ -1,6 +1,7 @@
 import { Hero } from "@/components/Hero";
 import { MyStory } from "@/components/MyStory";
 import { SelectedWork } from "@/components/SelectedWork";
+import { MinorProjects } from "@/components/MinorProjects";
 import { PortfolioMotion } from "@/components/PortfolioMotion";
 import { FunProjects } from "@/components/FunProjects";
 import { Brand } from "@/components/Brand";
@@ -20,6 +21,7 @@ export default function Home() {
       <main id="main">
         <Hero />
         <SelectedWork />
+        <MinorProjects />
         <FunProjects />
         <MyStory />
         <TechStack />

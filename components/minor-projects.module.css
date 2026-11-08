@@ -1,0 +1,27 @@
+.section { padding-top:70px; padding-bottom:110px; }
+.heading { display:flex; align-items:flex-end; justify-content:space-between; gap:32px; padding-bottom:44px; }
+.eyebrow { color:var(--muted-foreground); font-size:10px; letter-spacing:.12em; margin-bottom:20px; }
+.heading h2 { font-family:var(--font-display),Georgia,serif; font-size:clamp(42px,5.2vw,76px); font-weight:400; line-height:1.08; letter-spacing:-.035em; }
+.heading h2 em { color:var(--accent); }
+.intro { color:var(--muted-foreground); font-size:17px; line-height:1.5; }
+.grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:48px; }
+.project { min-width:0; border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:20px 0 22px; display:flex; flex-direction:column; }
+.topline { display:flex; justify-content:space-between; gap:16px; color:var(--muted-foreground); font-size:12px; }
+.topline>span:last-child { font-style:italic; }
+.study { display:block; width:100%; height:auto; margin:16px 0 18px; background:var(--surface); color:var(--accent); pointer-events:none; }
+.project h3 { font-family:var(--font-display),Georgia,serif; font-size:clamp(42px,4.3vw,64px); font-weight:400; line-height:1.1; letter-spacing:-.025em; }
+.description { color:var(--muted-foreground); font-size:18px; line-height:1.65; max-width:440px; margin:16px 0 20px; }
+.links { display:flex; flex-wrap:wrap; gap:28px; margin-top:auto; }
+.links a { display:inline-flex; align-items:center; gap:20px; min-height:48px; font-size:17px; text-decoration:underline; text-decoration-color:var(--border); text-underline-offset:6px; }
+.links a:hover { color:var(--accent); text-decoration-color:currentColor; }
+.links a:focus-visible { outline-offset:3px; }
+.links span { color:var(--accent); }
+@media(max-width:760px) {
+  .section { padding-top:48px; padding-bottom:64px; }
+  .heading { align-items:flex-start; flex-direction:column; gap:20px; padding-bottom:30px; }
+  .heading h2 { max-width:440px; }
+  .intro { font-size:16px; }
+  .grid { grid-template-columns:minmax(0,1fr); gap:42px; }
+  .study { max-height:280px; }
+  .description { font-size:17px; }
+}

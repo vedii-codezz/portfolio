@@ -40,6 +40,17 @@ The website pairs **Instrument Serif** with **Newsreader**, with **Noto Serif Be
 | **04 / Nikot-e-Metro** | An interactive Kolkata Metro experience for discovering nearby stations, routes, and interchanges through spatial discovery and graph-based routing. | [Live Demo](https://nikot-e-metro.vercel.app/) · [GitHub Source](https://github.com/vedii-codezz/nikot-e-metro) |
 | **05 / LUMA** | An editorial study workspace with subject organization, a sample study experience, authentication, and private PDF upload/download flows. | [Live Demo](https://luma-rust-beta.vercel.app/) · [GitHub Source](https://github.com/vedii-codezz/luma) |
 
+### Minor Project Works
+
+*Two smaller blooms from the lab: a little color, a little logic, and plenty of curiosity.*
+
+| Project | A small introduction | Explore |
+| --- | --- | --- |
+| **Chroma Lab** | An interactive color laboratory for exploring palettes, color harmonies, contrast, and UI combinations. | [Live Demo](https://chroma-lab-lovat.vercel.app/) · [GitHub Source](https://github.com/vedii-codezz/chromalab) |
+| **Itera** | An interactive algorithm visualizer that brings DSA concepts to life through step-by-step execution, pseudocode, and animated playback. | [Live Demo](https://itera-algo-visualizer.vercel.app/) · [GitHub Source](https://github.com/vedii-codezz/itera) |
+
+These little studies have their own editorial gallery, separate from the five featured projects, with original SVG artwork and data in [`data/minor-projects.ts`](data/minor-projects.ts).
+
 LUMA's live authentication and storage flows require backend configuration. AI tutoring and generated practice remain planned. Project descriptions and destinations are maintained in [`data/projects.ts`](data/projects.ts).
 
 ## The tools behind the magic
