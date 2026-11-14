@@ -3,6 +3,10 @@ html { scrollbar-gutter: stable; }
 .lotus-loader { display:none; }
 html[data-lotus-loading="pending"], html[data-lotus-loading="revealing"] { overflow:hidden; }
 html[data-lotus-loading="pending"] #portfolio-content { visibility:hidden; }
+/* Keep the real portrait above the opaque intro while the rest of the page waits. */
+html:is([data-lotus-loading="pending"],[data-lotus-loading="revealing"]) .hero { isolation:auto; }
+html:is([data-lotus-loading="pending"],[data-lotus-loading="revealing"]) .hero-portrait { z-index:1001; pointer-events:none; }
+html[data-lotus-loading="pending"] .portrait-frame { visibility:visible; }
 html[data-lotus-loading="pending"] .lotus-loader,
 html[data-lotus-loading="revealing"] .lotus-loader {
   display:grid; position:fixed; left:var(--loader-left,0px); top:var(--loader-top,0px); width:var(--loader-width,100vw); height:var(--loader-height,100dvh); z-index:1000; place-items:center;

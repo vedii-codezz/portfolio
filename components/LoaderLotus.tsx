@@ -92,7 +92,7 @@ export function LoaderLotus() {
             renderGeometry();
           });
           const petals = gsap.utils.toArray<HTMLElement>("[data-lotus-petal]", overlay);
-          gsap.set(content, { opacity: 0 });
+          gsap.set(content.querySelectorAll("[data-portrait]"), { scale: 1.03, clipPath: "inset(4% 0% 0% 0%)" });
           gsap.set(petals, { xPercent: -50, yPercent: -100, transformOrigin: "50% 97%" });
           const timeline = gsap.timeline({ onComplete: finish });
           // Keep every stage of the bloom while revealing the portrait sooner
@@ -171,7 +171,6 @@ export function LoaderLotus() {
           });
           timeline.call(reveal, [], 2.58)
             .to("[data-loader-backdrop]", { opacity: 0, duration: .24, ease: "sine.inOut" }, 2.56)
-            .to(content, { opacity: 1, duration: .24, ease: "sine.inOut" }, 2.58)
             .to("[data-loader-veil]", { opacity: 0, duration: .24, ease: "sine.inOut" }, 2.58)
             .add(heroEntrance(content, false).timeScale(1.25), 3.02)
             .to(overlay, { opacity: 0, duration: .1 }, 3.7);
