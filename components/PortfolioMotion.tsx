@@ -1,6 +1,7 @@
 "use client";
 
 import { fullMotionQuery } from "./motion-preference";
+import { storyEntrance } from "./story-motion";
 
 import { useEffect } from "react";
 import { gsap } from "gsap";
@@ -16,7 +17,7 @@ export function PortfolioMotion() {
       media.add(fullMotionQuery, () => {
         // Match the botanical rail's scroll range. These entrances only play once,
         // while the illustration remains freely reversible on its own timeline.
-        const education = gsap.from(".education-date, .education-content", { y: 20, opacity: 0, duration: .75, stagger: .1, ease: "power2.out", clearProps: "transform,opacity", paused: true });
+        const education = gsap.from("[data-chapter='education'] :is(.education-date, .education-content)", { ...storyEntrance, paused: true });
         const score = gsap.from(".education-score", { y: 12, opacity: 0, duration: .65, ease: "power2.out", clearProps: "transform,opacity", paused: true });
         let educationShown = false;
         let scoreShown = false;

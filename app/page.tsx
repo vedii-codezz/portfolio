@@ -11,7 +11,7 @@ import { LoaderLotus } from "@/components/LoaderLotus";
 import { TechStack } from "@/components/TechStack";
 import { ContactCTA } from "@/components/ContactCTA";
 import { siteUrl } from "@/data/site";
-import { education } from "@/data/education";
+import { publishedChapters } from "@/data/story";
 
 const person = {
   "@context": "https://schema.org",
@@ -20,7 +20,7 @@ const person = {
   url: `${siteUrl}/`,
   sameAs: socialItems.filter(item => item.link.startsWith("https://")).map(item => item.link),
   jobTitle: "B.Tech Computer Science student",
-  affiliation: { "@type": "CollegeOrUniversity", name: education[0].university },
+  affiliation: { "@type": "CollegeOrUniversity", name: publishedChapters.find(chapter => chapter.kind === "education")?.title },
 };
 
 export default function Home() {
