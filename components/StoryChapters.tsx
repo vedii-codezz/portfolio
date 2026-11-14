@@ -65,6 +65,7 @@ export function StoryChapters({ chapters }: { chapters: readonly StoryChapter[] 
             <li className="story-chapter" key={chapter.id} data-chapter={chapter.kind}>
               <div className="story-node" aria-hidden="true">
                 <JourneyLeaf index={index} />
+                  {chapter.id === "finora" && <LotusJourney small />}
               </div>
               <p className="story-period mono">{chapter.period}</p>
               <div className="story-copy">

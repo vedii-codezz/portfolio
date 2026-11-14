@@ -6,16 +6,25 @@ import { nodeProgress, vineThrough } from "./journey-motion";
 export function animateLotusJourney(journey: HTMLDivElement) {
   const svg = journey.querySelector<SVGSVGElement>(".journey-spine");
   const vine = journey.querySelector<SVGPathElement>("[data-story-vine]");
-  const bloom = journey.querySelector<SVGSVGElement>(".journey-bloom");
+  const bloom = journey.querySelector<SVGSVGElement>(".journey-bloom-final");
   if (!svg || !vine || !bloom) return;
 
   gsap.registerPlugin(ScrollTrigger);
   const chapters = Array.from(journey.querySelectorAll<HTMLElement>(".story-chapter"), chapter => ({
     node: chapter.querySelector<HTMLElement>(".story-node")!,
     leaf: chapter.querySelector<SVGPathElement>("[data-story-leaf]")!,
+    tendril: chapter.querySelector<SVGPathElement>("[data-story-tendril]")!,
+    seeds: Array.from(chapter.querySelectorAll<SVGCircleElement>("[data-story-seed]")),
     text: Array.from(chapter.querySelectorAll<HTMLElement>(".story-period, .story-copy")),
   }));
-  const petals = Array.from(bloom.querySelectorAll<SVGPathElement>("[data-story-petal]"));
+  const blossoms = Array.from(journey.querySelectorAll<SVGSVGElement>(".journey-bloom"), flower => ({
+    chapter: chapters.findIndex(({ node }) => node.contains(flower)),
+    petals: Array.from(flower.querySelectorAll<SVGGElement>("[data-story-petal]"), group => ({
+      group,
+      fold: Number(group.dataset.fold),
+      fill: group.querySelector<SVGPathElement>("[data-story-fill]")!,
+    })),
+  }));
   const state = { progress: 0 };
   const ease = gsap.parseEase(lotusEase);
   const clamp = gsap.utils.clamp(0, 1);
@@ -26,21 +35,28 @@ export function animateLotusJourney(journey: HTMLDivElement) {
   const paint = () => {
     const progress = state.progress;
     vine.style.strokeDashoffset = String(1 - progress);
-    chapters.forEach(({ leaf, text }, index) => {
+    chapters.forEach(({ leaf, tendril, seeds, text }, index) => {
       const start = nodes[index];
       const reveal = ease(clamp((progress - start) / .045));
       leaf.style.transform = `scale(${reveal})`;
       leaf.style.opacity = String(reveal);
+      tendril.style.strokeDashoffset = String(1 - ease(clamp((progress - start - .012) / .036)));
+      seeds.forEach((seed, i) => {
+        seed.style.opacity = String(ease(clamp((progress - start - .034 - i * .004) / .016)));
+      });
       text.forEach(element => {
         element.style.opacity = String(reveal);
         element.style.transform = `translateY(${12 * (1 - reveal)}px)`;
       });
     });
-    petals.forEach((petal, index) => {
-      const reveal = ease(clamp((progress - .91 - index * .003) / .066));
-      petal.style.strokeDashoffset = String(1 - reveal);
-      petal.style.transform = `scale(${.55 + .45 * reveal})`;
-      petal.style.opacity = String(reveal);
+    blossoms.forEach(({ chapter, petals }) => {
+      const start = chapter < 0 ? .91 : nodes[chapter];
+      petals.forEach(({ group, fold, fill }, index) => {
+        const reveal = ease(clamp((progress - start - index * .004) / .035));
+        group.style.transform = `rotate(${fold * (1 - reveal)}deg) scale(${.38 + .62 * reveal})`;
+        group.style.opacity = String(reveal);
+        fill.style.opacity = String(.08 * ease(clamp((progress - start - .068) / .02)));
+      });
     });
   };
 
@@ -93,6 +109,16 @@ export function animateLotusJourney(journey: HTMLDivElement) {
     animation.scrollTrigger?.kill();
     animation.kill();
     delete journey.dataset.storyMotion;
-    [vine, ...petals, ...chapters.flatMap(({ leaf, text }) => [leaf, ...text])].forEach(element => element.removeAttribute("style"));
+    vine.style.removeProperty("stroke-dashoffset");
+    chapters.forEach(({ leaf, tendril, seeds, text }) => {
+      leaf.style.removeProperty("transform");
+      leaf.style.removeProperty("opacity");
+      tendril.style.removeProperty("stroke-dashoffset");
+      [...seeds, ...text].forEach(element => element.removeAttribute("style"));
+    });
+    blossoms.forEach(({ petals }) => petals.forEach(({ group, fill }) => {
+      group.removeAttribute("style");
+      fill.removeAttribute("style");
+    }));
   };
 }
