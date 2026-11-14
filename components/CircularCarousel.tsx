@@ -17,8 +17,8 @@ type Props = {
 };
 type Press = { id: number; x: number; y: number; origin: number; angle: number; moved: boolean; samples: { angle: number; time: number }[] };
 
-// Motion and eight-strip bending follow React Bits' cylinder preset. Only
-// decorative artwork is repeated; every project has one interactive wrapper.
+// The cylinder loops by rotation. Three strips approximate each curved face
+// while keeping a single interactive wrapper per project.
 export default function CircularCarousel({ items, selectedIndex, onChange, onPreview, cardWidth = 270, gap = 58, perspective = 2500, momentum = .6, depthFade = .35, cornerRadius = 12, curve = 1, tilt = -5, parallax = .3, stretch = .5, innerShade = .3, intro = "rise" }: Props) {
   const root = useRef<HTMLDivElement>(null);
   const stage = useRef<HTMLDivElement>(null);
@@ -38,7 +38,7 @@ export default function CircularCarousel({ items, selectedIndex, onChange, onPre
     controller.current?.refresh();
   };
   const count = items.length;
-  const tileCount = curve > .001 ? 8 : 1;
+  const tileCount = curve > .001 ? 3 : 1;
 
   useEffect(() => {
     const shell = root.current, surface = stage.current, view = camera.current, cylinder = ring.current;
@@ -87,7 +87,7 @@ export default function CircularCarousel({ items, selectedIndex, onChange, onPre
       width = cards.current[0]?.offsetWidth || cardWidth;
       radius = ringRadius(count, width, gap, curve);
       reduced = media.matches;
-      const geometry = bendTiles(width, radius, reduced ? 0 : curve);
+      const geometry = bendTiles(width, radius, reduced ? 0 : curve, tileCount);
       const chord = reduced || !curve ? width : 2 * (radius / curve) * Math.sin(width / (2 * radius / curve));
       shell.style.setProperty("--carousel-chord", `${chord}px`);
       shell.style.setProperty("--carousel-measured-width", `${width}px`);

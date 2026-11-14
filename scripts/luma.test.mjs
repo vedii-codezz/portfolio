@@ -25,6 +25,9 @@ function load(file){
 test('Selected Work renders five artwork-only cards with one initial details panel',()=>{
  const html=renderToStaticMarkup(createElement(load('components/SelectedWork.tsx').SelectedWork));
  assert.equal((html.match(/class="carousel-card"/g)??[]).length,5);
+ assert.equal((html.match(/class="carousel-art-tile"/g)??[]).length,15);
+ assert.equal((html.match(/class="carousel-art-tile carousel-art-back"/g)??[]).length,15);
+ assert.equal((html.match(/class="carousel-tiled-surface" aria-hidden="true" inert=""/g)??[]).length,5);
  assert.equal((html.match(/<a /g)??[]).length,2);
  assert.match(html,/class="work-count">05/);
  assert.deepEqual([...html.matchAll(/data-project="([^"]+)"/g)].map(match=>match[1]),projects.map(project=>project.slug));

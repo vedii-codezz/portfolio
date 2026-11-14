@@ -19,8 +19,8 @@ export function ringRadius(count: number, width: number, gap: number, curve = 1)
   return Math.max(chord + (arc - chord) * clamp(curve, 0, 1), width * .6);
 }
 
-export function bendTiles(width: number, radius: number, curve = 1) {
-  const total = curve > .001 ? 8 : 1;
+export function bendTiles(width: number, radius: number, curve = 1, segments = 8) {
+  const total = curve > .001 ? segments : 1;
   const bendRadius = curve > .001 ? radius / curve : 0;
   return Array.from({ length: total }, (_, index) => {
     const start = index * width / total - (index ? 1.25 : 0);
