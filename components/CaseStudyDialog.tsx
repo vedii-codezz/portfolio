@@ -42,7 +42,7 @@ export default function CaseStudyDialog({ slug, onClose }: { slug: CaseStudy["sl
           </div>
           <h2 id="case-study-title">{study.name}</h2>
           <p className={styles.tagline}>{study.tagline}</p>
-          <p className={styles.meta}>{study.kind} · {study.month ? `${study.month} ` : ""}{study.year} · {study.role}</p>
+          <p className={styles.meta}>{study.kind === "Team" ? "Team project" : study.kind} · {study.month ? `${study.month} ` : ""}{study.year} · {study.accolade ?? study.role}</p>
         </header>
         <section aria-labelledby="case-study-problem">
           <h3 id="case-study-problem">Problem</h3>

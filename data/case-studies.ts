@@ -1,4 +1,4 @@
-import type { Project } from "./projects";
+import { finoraDate, type Project } from "./projects";
 
 export type CaseStudy = {
   slug: Project["slug"];
@@ -10,6 +10,7 @@ export type CaseStudy = {
   year: number;
   month: string | null;
   role: string;
+  accolade?: string;
   problem: string;
   project: string[];
   contributions: string[];
@@ -29,9 +30,9 @@ export const caseStudies: readonly CaseStudy[] = [
     name: "FINORA",
     tagline: "Your money, finally with a brain.",
     kind: "Team",
-    year: 2026,
-    month: null,
+    ...finoraDate,
     role: "Demo Video Production & Pitch Presentation",
+    accolade: "2nd Runner-up, Build with Gemma: GDG TIU Buildathon",
     problem: "Traditional personal finance applications provide financial data but often fail to translate it into clear, actionable guidance. Users need a more intelligent way to understand their finances and make informed financial decisions.",
     project: [
       "Finora is an AI-powered personal finance platform developed by our team, featuring a multi-agent architecture that analyzes financial information and generates personalized recommendations.",
@@ -42,9 +43,10 @@ export const caseStudies: readonly CaseStudy[] = [
       "Developed the pitch speech, translating complex technical concepts into a clear, engaging presentation.",
       "Helped communicate the project's problem statement, proposed solution, and value proposition.",
     ],
+    // TODO(verify): confirm whether Gemma should be listed in the stack.
     stack: ["Python", "FastAPI", "Groq LLM", "Three.js", "Multi-Agent AI"],
     stackNote: "Technologies used by the team, not a representation of my individual development contribution.",
-    result: "Contributed to the team's project presentation by producing its demonstration video and pitch narrative. Strengthened my technical storytelling, product communication, and ability to explain complex AI systems to an audience.",
+    result: "Our team, The Orchestrators, placed 2nd runner-up at the Build with Gemma: GDG TIU Buildathon (July 24–25, 2026), a buildathon on Google DeepMind's Gemma models. I produced the demo video and the pitch. It taught me how to explain a complex multi-agent system clearly to a judging panel.",
     links: { demo: "https://vibeforge-cyan.vercel.app/", github: "https://github.com/Adhirajsingh2507/Error-404-Not-Found" },
     media: [],
   },
@@ -134,7 +136,7 @@ export const caseStudies: readonly CaseStudy[] = [
     tagline: "A smarter workspace for more focused learning.",
     kind: "Solo",
     year: 2026,
-    month: "November",
+    month: null,
     role: "Full-Stack Development, Product Architecture & AI Study-System Design",
     problem: "Students often manage notes, documents, quizzes, and revision schedules across disconnected applications, making it difficult to maintain a structured learning workflow. Most study tools focus on storing information rather than connecting learning materials, practice, and progress in one place.",
     project: [

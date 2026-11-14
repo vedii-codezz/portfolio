@@ -31,9 +31,9 @@ const chapters: readonly StoryChapter[] = [
   {
     id: "finora",
     kind: "hackathon",
-    title: "Finora",
-    period: "2026",
-    summary: "Hackathon team project. I produced the demo video and the pitch.",
+    title: "Build with Gemma: GDG TIU Buildathon",
+    period: "July 24–25, 2026",
+    summary: "A buildathon on Google DeepMind's Gemma models. Our team placed 2nd runner-up with Finora, and I produced the demo video and the pitch.",
     details: [],
     links: [{ label: "Finora", caseStudy: "finora" }],
     status: "published",
