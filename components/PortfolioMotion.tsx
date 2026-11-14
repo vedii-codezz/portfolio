@@ -42,11 +42,9 @@ export function PortfolioMotion() {
         // CSS owns doodle hover transforms; their entrance only owns opacity.
         gsap.from(".pengu-doodle", { opacity: 0, stagger: 0.2, duration: 0.7, clearProps: "opacity", scrollTrigger: { trigger: ".pengu-stage", start: "top 80%", once: true } });
         const float = gsap.to(".pengu-float", { y: -12, rotation: 2, duration: 2.2, ease: "sine.inOut", repeat: -1, yoyo: true, paused: true });
-        const cue = gsap.to(".scroll-line", { y: 5, duration: 1.2, ease: "sine.inOut", repeat: -1, yoyo: true, paused: true });
         const visibleMotion = (trigger: string, tween: gsap.core.Tween) => ScrollTrigger.create({ trigger, start: "top bottom", end: "bottom top", onToggle: self => { tween.paused(!self.isActive || document.hidden); } });
         const penguTrigger = visibleMotion(".pengu-stage", float);
-        const heroTrigger = visibleMotion(".hero", cue);
-        const onVisibility = () => { float.paused(document.hidden || !penguTrigger.isActive); cue.paused(document.hidden || !heroTrigger.isActive); };
+        const onVisibility = () => { float.paused(document.hidden || !penguTrigger.isActive); };
         document.addEventListener("visibilitychange", onVisibility);
         // Prebuilt in this context; repeated clicks never stack animations.
         const reaction = gsap.timeline({ paused: true })
