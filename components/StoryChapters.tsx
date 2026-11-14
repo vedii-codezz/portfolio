@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import type { StoryChapter } from "@/data/story";
 import type { Project } from "@/data/projects";
 import { fullMotionQuery } from "./motion-preference";
-import { JourneyLeaf, LotusJourney, vinePath } from "./LotusJourney";
+import { JourneyLeaf, LotusJourney } from "./LotusJourney";
 
 const CaseStudyDialog = dynamic(() => import("./CaseStudyDialog"), { ssr: false });
 
@@ -53,8 +53,8 @@ export function StoryChapters({ chapters }: { chapters: readonly StoryChapter[] 
     <>
       <div className="story-journey" ref={journey}>
         <div className="journey-rail" aria-hidden="true">
-          <svg className="journey-fallback" viewBox="40 310 200 404" preserveAspectRatio="none" focusable="false">
-            <path d={vinePath} />
+          <svg className="journey-fallback" viewBox="0 0 100 300" preserveAspectRatio="none" focusable="false">
+            <path d="M50 0Q74 15 50 38C22 64 22 104 50 138S78 212 50 238Q31 264 50 300" />
           </svg>
           <svg className="journey-spine" focusable="false">
             <path data-story-vine pathLength={1} />
@@ -65,7 +65,7 @@ export function StoryChapters({ chapters }: { chapters: readonly StoryChapter[] 
             <li className="story-chapter" key={chapter.id} data-chapter={chapter.kind}>
               <div className="story-node" aria-hidden="true">
                 <JourneyLeaf index={index} />
-                  {chapter.id === "finora" && <LotusJourney small />}
+                <LotusJourney />
               </div>
               <p className="story-period mono">{chapter.period}</p>
               <div className="story-copy">
@@ -103,7 +103,6 @@ export function StoryChapters({ chapters }: { chapters: readonly StoryChapter[] 
             </li>
           ))}
         </ol>
-        <LotusJourney />
       </div>
       <p className="story-closing mono">LEARNING THE SCIENCE. EXPLORING THE ART.</p>
       {caseStudy && <CaseStudyDialog slug={caseStudy} onClose={() => {

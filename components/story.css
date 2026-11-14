@@ -1,9 +1,7 @@
 .story-journey {
   --spine-x: 50%;
   --spine-width: clamp(84px, 11vw, 152px);
-  --spine-gap: clamp(56px, 7vw, 98px);
-  --bloom-width: 240px;
-  --bloom-height: calc(var(--bloom-width) * 180 / 280);
+  --spine-gap: 124px;
   position: relative;
 }
 .story .story-heading { gap: 24px; flex-wrap: wrap; padding-bottom: 38px; }
@@ -19,9 +17,10 @@
   column-gap: calc(2 * var(--spine-gap));
   align-content: start;
   align-items: start;
-  min-height: 86svh;
-  padding-block: 16svh 10svh;
+  min-height: min(65svh, 650px);
+  padding-block: 14svh 5svh;
 }
+.story-chapter:last-child { min-height: min(78svh, 760px); }
 .story-period, .story-copy { grid-row: 1; min-width: 0; }
 .story-copy { grid-column: 1; justify-self: end; width: min(100%, 410px); }
 .story-period { grid-column: 2; margin-top: .4rem; }
@@ -46,18 +45,19 @@
 .story-node {
   --ornament-direction: -1;
   --ornament-width: min(var(--spine-width), 130px);
-  --small-bloom-width: min(var(--spine-width), 110px);
+  --node-bloom-width: 140px;
   position: absolute;
-  top: calc(16svh + .75rem);
+  top: calc(14svh + .75rem);
   left: var(--spine-x);
   width: 0;
   height: 0;
 }
 .story-chapter:nth-child(even) .story-node { --ornament-direction: 1; }
 .story-chapter:nth-child(3n) .story-node { --ornament-width: min(var(--spine-width), 112px); }
+.story-chapter:last-child .story-node { --node-bloom-width: 200px; }
 .journey-rail {
   position: absolute;
-  inset-block: 0 calc(var(--bloom-height) * .1944);
+  inset-block: 0;
   left: var(--spine-x);
   width: var(--spine-width);
   transform: translateX(-50%);
@@ -95,19 +95,12 @@
 [data-story-leaf], [data-story-seed] { fill: currentColor; }
 [data-story-leaf] { fill-opacity: .12; }
 .journey-ornament path { vector-effect: non-scaling-stroke; }
-.journey-bloom { pointer-events: none; }
-.journey-bloom-final {
-  display: block;
-  position: relative;
-  width: var(--bloom-width);
-  height: var(--bloom-height);
-  margin: calc(var(--bloom-height) * -.65) 0 0 calc(var(--spine-x) - var(--bloom-width) / 2);
-}
-.journey-bloom-small {
+.journey-bloom {
   position: absolute;
-  width: var(--small-bloom-width);
-  left: calc(var(--small-bloom-width) / -2);
-  top: calc(var(--small-bloom-width) * -145 / 280);
+  width: var(--node-bloom-width);
+  left: calc(var(--node-bloom-width) / -2);
+  top: calc(var(--node-bloom-width) * -145 / 280);
+  pointer-events: none;
 }
 [data-story-petal] { transform-origin: 140px 310px; }
 .journey-petal-outline { fill: var(--surface); }
@@ -116,18 +109,20 @@
 .story-closing { text-align: center; line-height: 1.5; margin: 12px 0 0; }
 
 @media (max-width: 1023px) {
-  .story-journey { --spine-x: 33px; --spine-width: 66px; --spine-gap: 72px; --bloom-width: 90px; }
+  .story-journey { --spine-x: 40px; --spine-width: 66px; --spine-gap: 88px; }
   .story-chapter {
     grid-template-columns: minmax(0, 1fr);
     gap: 8px;
-    min-height: 55svh;
-    padding: 10svh 0 7svh var(--spine-gap);
+    min-height: 50svh;
+    padding: 8svh 0 5svh var(--spine-gap);
   }
+  .story-chapter:last-child { min-height: 53svh; }
   .story-chapter:nth-child(n) .story-node {
     --ornament-direction: 1;
-    --small-bloom-width: 64px;
-    top: calc(10svh + .75rem);
+    --node-bloom-width: 86px;
+    top: calc(8svh + .75rem);
   }
+  .story-chapter:last-child .story-node { --node-bloom-width: 100px; }
   .story-chapter .story-period, .story-chapter:nth-child(even) .story-period { grid-area: 1 / 1; text-align: left; }
   .story-chapter .story-copy, .story-chapter:nth-child(even) .story-copy { grid-area: 2 / 1; justify-self: start; }
   .story-copy h3 { font-size: clamp(32px, 6vw, 48px); }

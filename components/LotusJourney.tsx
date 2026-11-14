@@ -18,9 +18,6 @@ const leaves = [
   "M125 542C107 519 117 503 128 491C133 514 120 523 125 542Z",
   "M112 626C116 594 136 589 151 582C144 605 130 622 112 626Z",
 ];
-export const vinePath = "M140 310C146 336 98 350 125 387C162 431 191 449 160 495C135 534 91 558 109 605C120 635 159 663 140 714";
-
-
 const tendrils = [
   "M0 0C14 -3 13 -27 33 -30C49 -32 55 -13 44 -9C35 -6 32 -16 38 -19C42 -21 45 -17 42 -15",
   "M0 0C13 8 32 24 47 14C57 7 52 -7 43 -6C35 -5 35 5 41 5C45 5 46 0 43 0",
@@ -62,9 +59,9 @@ const veins = [
   "M145 312Q174 320 203 333M150 317Q171 332 186 331",
 ];
 
-export function LotusJourney({ small = false }: { small?: boolean }) {
+export function LotusJourney() {
   return (
-    <svg className={small ? "journey-bloom journey-bloom-small" : "journey-bloom journey-bloom-final"}
+    <svg className="journey-bloom"
       viewBox="0 165 280 180" aria-hidden="true" focusable="false">
       {[0, 3, 4, 5, 6, 1, 7, 8, 2].map(index => (
         <g key={index} data-story-petal data-fold={[0, 0, 0, 23, -23, 32, -32, 28, -28][index]}>

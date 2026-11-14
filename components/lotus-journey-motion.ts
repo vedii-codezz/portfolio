@@ -6,8 +6,7 @@ import { nodeProgress, vineThrough } from "./journey-motion";
 export function animateLotusJourney(journey: HTMLDivElement) {
   const svg = journey.querySelector<SVGSVGElement>(".journey-spine");
   const vine = journey.querySelector<SVGPathElement>("[data-story-vine]");
-  const bloom = journey.querySelector<SVGSVGElement>(".journey-bloom-final");
-  if (!svg || !vine || !bloom) return;
+  if (!svg || !vine) return;
 
   gsap.registerPlugin(ScrollTrigger);
   const chapters = Array.from(journey.querySelectorAll<HTMLElement>(".story-chapter"), chapter => ({
@@ -16,10 +15,7 @@ export function animateLotusJourney(journey: HTMLDivElement) {
     tendril: chapter.querySelector<SVGPathElement>("[data-story-tendril]")!,
     seeds: Array.from(chapter.querySelectorAll<SVGCircleElement>("[data-story-seed]")),
     text: Array.from(chapter.querySelectorAll<HTMLElement>(".story-period, .story-copy")),
-  }));
-  const blossoms = Array.from(journey.querySelectorAll<SVGSVGElement>(".journey-bloom"), flower => ({
-    chapter: chapters.findIndex(({ node }) => node.contains(flower)),
-    petals: Array.from(flower.querySelectorAll<SVGGElement>("[data-story-petal]"), group => ({
+    petals: Array.from(chapter.querySelectorAll<SVGGElement>("[data-story-petal]"), group => ({
       group,
       fold: Number(group.dataset.fold),
       fill: group.querySelector<SVGPathElement>("[data-story-fill]")!,
@@ -35,7 +31,7 @@ export function animateLotusJourney(journey: HTMLDivElement) {
   const paint = () => {
     const progress = state.progress;
     vine.style.strokeDashoffset = String(1 - progress);
-    chapters.forEach(({ leaf, tendril, seeds, text }, index) => {
+    chapters.forEach(({ leaf, tendril, seeds, text, petals }, index) => {
       const start = nodes[index];
       const reveal = ease(clamp((progress - start) / .045));
       leaf.style.transform = `scale(${reveal})`;
@@ -48,9 +44,6 @@ export function animateLotusJourney(journey: HTMLDivElement) {
         element.style.opacity = String(reveal);
         element.style.transform = `translateY(${12 * (1 - reveal)}px)`;
       });
-    });
-    blossoms.forEach(({ chapter, petals }) => {
-      const start = chapter < 0 ? .91 : nodes[chapter];
       petals.forEach(({ group, fold, fill }, index) => {
         const reveal = ease(clamp((progress - start - index * .004) / .035));
         group.style.transform = `rotate(${fold * (1 - reveal)}deg) scale(${.38 + .62 * reveal})`;
@@ -110,15 +103,15 @@ export function animateLotusJourney(journey: HTMLDivElement) {
     animation.kill();
     delete journey.dataset.storyMotion;
     vine.style.removeProperty("stroke-dashoffset");
-    chapters.forEach(({ leaf, tendril, seeds, text }) => {
+    chapters.forEach(({ leaf, tendril, seeds, text, petals }) => {
       leaf.style.removeProperty("transform");
       leaf.style.removeProperty("opacity");
       tendril.style.removeProperty("stroke-dashoffset");
       [...seeds, ...text].forEach(element => element.removeAttribute("style"));
+      petals.forEach(({ group, fill }) => {
+        group.removeAttribute("style");
+        fill.removeAttribute("style");
+      });
     });
-    blossoms.forEach(({ petals }) => petals.forEach(({ group, fill }) => {
-      group.removeAttribute("style");
-      fill.removeAttribute("style");
-    }));
   };
 }
