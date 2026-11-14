@@ -36,7 +36,7 @@ export function Hero() {
           <div className="portrait-orbit" aria-hidden="true" />
           <span className="portrait-side mono" aria-hidden="true">A CURIOUS MIND. A CREATIVE SOUL.</span>
           <div className="portrait-frame" data-portrait>
-            <Image src={portrait} alt="Bedantika Mondal wearing a red sari" fill preload placeholder="blur" sizes="(max-width: 600px) 85vw, (max-width: 900px) 46vw, 38vw" className="portrait-image" />
+            <Image src={portrait} alt="Bedantika Mondal wearing a red sari" preload placeholder="blur" sizes="(max-width: 600px) 70vw, (max-width: 900px) 38vw, (max-width: 1100px) 36vw, (max-width: 1499px) 37vw, 550px" className="portrait-image" />
             <span className="portrait-corner" aria-hidden="true">B / M</span>
           </div>
           <figcaption className="mono"><span>01 — THE PERSON BEHIND THE PIXELS</span><span aria-hidden="true">↗</span></figcaption>

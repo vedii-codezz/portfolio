@@ -2,7 +2,7 @@ import { Hero } from "@/components/Hero";
 import { MyStory } from "@/components/MyStory";
 import { SelectedWork } from "@/components/SelectedWork";
 import { MinorProjects } from "@/components/MinorProjects";
-import { PortfolioMotion } from "@/components/PortfolioMotion";
+import { DeferredPortfolioMotion } from "@/components/DeferredPortfolioMotion";
 import { FunProjects } from "@/components/FunProjects";
 import { Brand } from "@/components/Brand";
 import StaggeredMenu from "@/components/StaggeredMenu";
@@ -33,7 +33,7 @@ export default function Home() {
         <a className="back-top" href="#home">Back to top <span aria-hidden="true">↑</span></a>
       </footer>
       </div>
-      <PortfolioMotion />
+      <DeferredPortfolioMotion />
     </>
   );
 }
