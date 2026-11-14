@@ -22,14 +22,15 @@ function load(file) {
   return exports;
 }
 
-test('toolkit exposes four flip controls and keeps all 19 technologies in initially hidden semantic lists', () => {
+test('toolkit exposes four flip controls and all 29 technologies in semantic lists', () => {
   const html = renderToStaticMarkup(createElement(load('components/TechStack.tsx').TechStack));
   assert.equal((html.match(/aria-pressed="false"/g) ?? []).length, 4);
   assert.equal((html.match(/data-flip-face="back"[^>]*aria-hidden="true"/g) ?? []).length, 4);
   assert.equal((html.match(/<ul /g) ?? []).length, 4);
-  assert.equal((html.match(/<li[ >]/g) ?? []).length, 19);
-  for (const technology of ['Python', 'JavaScript', 'HTML5', 'CSS3', 'C', 'Java', 'GSAP', 'Framer Motion', 'Spline', 'Generative AI', 'Gemini API', 'Multi-Agent Systems', 'NumPy', 'FastAPI', 'Git', 'GitHub', 'VS Code', 'Vercel', 'Kaggle']) {
-    assert.ok(html.includes(`>${technology}</span>`), `${technology} is preserved`);
+  assert.equal((html.match(/<li[ >]/g) ?? []).length, 29);
+  assert.ok(!html.includes('>Spline</span>'));
+  for (const technology of ['Python', 'JavaScript', 'HTML5', 'CSS3', 'C', 'Java', 'GSAP', 'Framer Motion', 'Generative AI', 'Gemini API', 'Multi-Agent Systems', 'NumPy', 'FastAPI', 'Git', 'GitHub', 'VS Code', 'Vercel', 'Kaggle', 'Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'Supabase', 'PostgreSQL', 'Zod', 'Zustand', 'MapLibre GL', 'Drizzle ORM', 'Lenis']) {
+    assert.ok(html.includes(`>${technology}</span>`), `${technology} is listed`);
   }
   assert.equal((html.match(/data-stack-category/g) ?? []).length, 4);
 });
