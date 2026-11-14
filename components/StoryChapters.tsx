@@ -1,94 +1,103 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
-import { gsap } from "gsap";
+import { useEffect, useRef, useState } from "react";
 import type { StoryChapter } from "@/data/story";
 import type { Project } from "@/data/projects";
 import { fullMotionQuery } from "./motion-preference";
-import { storyEntrance } from "./story-motion";
+import { JourneyLeaf, LotusJourney, vinePath } from "./LotusJourney";
 
 const CaseStudyDialog = dynamic(() => import("./CaseStudyDialog"), { ssr: false });
 
-export function StoryChapters({ chapters, illustration, children }: {
-  chapters: readonly StoryChapter[];
-  illustration: ReactNode;
-  children: ReactNode;
-}) {
-  const [step, setStep] = useState(0);
+export function StoryChapters({ chapters }: { chapters: readonly StoryChapter[] }) {
   const [caseStudy, setCaseStudy] = useState<Project["slug"] | null>(null);
-  const timeline = useRef<HTMLOListElement>(null);
+  const journey = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLAnchorElement>(null);
-  const current = step % chapters.length;
-  const next = (current + 1) % chapters.length;
+  useEffect(() => {
+    const element = journey.current;
+    if (!element) return;
+    const media = matchMedia(fullMotionQuery);
+    let near = false;
+    let generation = 0;
+    let cleanup: (() => void) | undefined;
 
-  useLayoutEffect(() => {
-    const entry = timeline.current?.children[current];
-    if (!step || !entry) return;
-    const media = gsap.matchMedia();
-    media.add(fullMotionQuery, () => {
-      gsap.from(entry.querySelectorAll(".education-date, .education-content, .education-score"), storyEntrance);
-    });
-    return () => media.revert();
-  }, [current, step]);
+    const update = async () => {
+      const current = ++generation;
+      cleanup?.();
+      cleanup = undefined;
+      if (!near || !media.matches) return;
+      try {
+        const { animateLotusJourney } = await import("./lotus-journey-motion");
+        if (generation === current) cleanup = animateLotusJourney(element);
+      } catch (error) {
+        console.error("Could not load the lotus journey animation", error);
+      }
+    };
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      near = true;
+      observer.disconnect();
+      void update();
+    }, { rootMargin: "600px 0px" });
+    observer.observe(element);
+    media.addEventListener("change", update);
+    return () => {
+      generation++;
+      cleanup?.();
+      observer.disconnect();
+      media.removeEventListener("change", update);
+    };
+  }, []);
 
   return (
     <>
-      <div className="story-journey">
-        {illustration}
-        <div className="story-chapters">
-          {children}
-          <ol className="education-timeline" id="story-timeline" ref={timeline} role="list">
-            {chapters.map((chapter, index) => (
-              <li className="education-entry" key={chapter.id} data-chapter={chapter.kind} data-active={index === current}>
-                <div className="education-date mono">
-                  <span className="timeline-dot" aria-hidden="true" />
-                  <p>{chapter.period}</p>
-                  {chapter.academicStanding && <span className="ongoing"><i /> {chapter.academicStanding.label}</span>}
-                </div>
-                <div className="education-content">
-                  <span className="mono small-label">{chapter.kind.toUpperCase()} / CHAPTER {String(index + 1).padStart(2, "0")}</span>
-                  <h3>{chapter.title}</h3>
-                  {chapter.kind !== "education" && <p>{chapter.summary}</p>}
-                  {chapter.details.map(detail => <p key={detail}>{detail}</p>)}
-                  {chapter.kind === "education" && <span className="education-footnote mono">{chapter.summary}</span>}
-                  {chapter.links.length > 0 && <ul className="story-links">
-                    {chapter.links.map(link => (
-                      <li key={link.label}>
-                        {"caseStudy" in link ? (
-                          <a className="text-link" href="#work" aria-label={`${link.label} case study`}
-                            onClick={event => {
-                              if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-                              event.preventDefault();
-                              trigger.current = event.currentTarget;
-                              setCaseStudy(link.caseStudy);
-                            }}>{link.label} <span aria-hidden="true">↗</span></a>
-                        ) : (
-                          <a className="text-link" href={link.href} aria-label={link.ariaLabel}
-                            target="_blank" rel="noopener noreferrer">{link.label} <span aria-hidden="true">↗</span></a>
-                        )}
-                      </li>
-                    ))}
-                  </ul>}
-                </div>
-                {chapter.academicStanding && (
-                  <div className="education-score"><span className="mono">CGPA</span><strong>{chapter.academicStanding.cgpa}</strong><span className="mono">CURRENT ACADEMIC STANDING</span></div>
-                )}
-              </li>
-            ))}
-          </ol>
+      <div className="story-journey" ref={journey}>
+        <div className="journey-rail" aria-hidden="true">
+          <svg className="journey-fallback" viewBox="40 310 200 404" preserveAspectRatio="none" focusable="false">
+            <path d={vinePath} />
+          </svg>
+          <svg className="journey-spine" focusable="false">
+            <path data-story-vine pathLength={1} />
+          </svg>
         </div>
+        <ol className="story-timeline" role="list">
+          {chapters.map((chapter, index) => (
+            <li className="story-chapter" key={chapter.id} data-chapter={chapter.kind}>
+              <div className="story-node" aria-hidden="true">
+                <JourneyLeaf index={index} />
+              </div>
+              <p className="story-period mono">{chapter.period}</p>
+              <div className="story-copy">
+                <h3>{chapter.title}</h3>
+                {chapter.kind !== "education" && <p>{chapter.summary}</p>}
+                {chapter.details.map(detail => <p key={detail}>{detail}</p>)}
+                {chapter.kind === "education" && <p className="story-education-summary mono">{chapter.summary}</p>}
+                {chapter.academicStanding && <p className="story-academic mono">{chapter.academicStanding.label} · CGPA {chapter.academicStanding.cgpa}</p>}
+                {chapter.links.length > 0 && <ul className="story-links">
+                  {chapter.links.map(link => (
+                    <li key={link.label}>
+                      {"caseStudy" in link ? (
+                        <a className="text-link" href="#work" aria-label={`${link.label} case study`}
+                          onClick={event => {
+                            if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+                            event.preventDefault();
+                            trigger.current = event.currentTarget;
+                            setCaseStudy(link.caseStudy);
+                          }}>{link.label} <span aria-hidden="true">↗</span></a>
+                      ) : (
+                        <a className="text-link" href={link.href} aria-label={link.ariaLabel}
+                          target="_blank" rel="noopener noreferrer">{link.label} <span aria-hidden="true">↗</span></a>
+                      )}
+                    </li>
+                  ))}
+                </ul>}
+              </div>
+            </li>
+          ))}
+        </ol>
+        <LotusJourney />
       </div>
-      <div className="story-bottom mono">
-        <span>LEARNING THE SCIENCE. EXPLORING THE ART.</span>
-        {chapters.length > 1 && (
-          <div className="story-pagination">
-            <span aria-live="polite" aria-atomic="true"><span className="sr-only">Chapter {chapters[current].title}, </span>{current + 1} / {chapters.length}</span>
-            <button type="button" aria-controls="story-timeline" aria-label={`Continued to ${chapters[next].title}`}
-              onClick={() => setStep(previous => previous + 1)}>CONTINUED <span aria-hidden="true">→</span></button>
-          </div>
-        )}
-      </div>
+      <p className="story-closing mono">LEARNING THE SCIENCE. EXPLORING THE ART.</p>
       {caseStudy && <CaseStudyDialog slug={caseStudy} onClose={() => {
         setCaseStudy(null);
         trigger.current?.focus({ preventScroll: true });

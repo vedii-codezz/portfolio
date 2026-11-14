@@ -1,4 +1,4 @@
-import { finoraResultsLink, type Project } from "./projects";
+import { finoraResultsLink, projects, type Project } from "./projects";
 
 type StoryLink =
   | { label: string; caseStudy: Project["slug"] }
@@ -36,21 +36,6 @@ const chapters: readonly StoryChapter[] = [
     summary: "A buildathon on Google DeepMind's Gemma models. Our team placed 2nd runner-up with Finora, and I produced the demo video and the pitch.",
     details: [],
     links: [{ label: "Finora", caseStudy: "finora" }, finoraResultsLink],
-    status: "published",
-  },
-  {
-    id: "solo-projects",
-    kind: "projects",
-    title: "Projects",
-    period: "2026",
-    summary: "Built and deployed four solo projects: Veyra, Aptly, Nikot-e-Metro and Luma.",
-    details: [],
-    links: [
-      { label: "Veyra", caseStudy: "veyra" },
-      { label: "Aptly", caseStudy: "aptly" },
-      { label: "Nikot-e-Metro", caseStudy: "nikot-e-metro" },
-      { label: "Luma", caseStudy: "luma" },
-    ],
     status: "published",
   },
   // Waiting on Bedantika's input.
@@ -97,6 +82,16 @@ const chapters: readonly StoryChapter[] = [
     links: [{ label: "TODO", href: "TODO" }],
     status: "draft",
   },
+  ...projects.filter(project => project.kind === "Solo").sort((a, b) => a.order - b.order).map((project): StoryChapter => ({
+    id: project.slug,
+    kind: "projects",
+    title: project.name,
+    period: project.month ? `${project.month} ${project.year}` : String(project.year),
+    summary: project.title,
+    details: [],
+    links: [{ label: project.name, caseStudy: project.slug }],
+    status: "published",
+  })),
 ];
 
 export const publishedChapters = chapters.filter(chapter => chapter.status === "published");

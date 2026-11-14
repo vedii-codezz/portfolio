@@ -1,0 +1,113 @@
+.story-journey {
+  --spine-x: 50%;
+  --spine-width: clamp(84px, 11vw, 152px);
+  --spine-gap: clamp(56px, 7vw, 98px);
+  --bloom-width: 240px;
+  --bloom-height: calc(var(--bloom-width) * 180 / 280);
+  position: relative;
+}
+.story .story-heading { gap: 24px; flex-wrap: wrap; padding-bottom: 38px; }
+.story .story-heading h2 { font-size: clamp(56px, 6vw, 98px); }
+.story .story-heading > p { padding-right: 0; }
+.story .story-heading em { display: inline-block; white-space: nowrap; }
+
+.story-timeline { position: relative; list-style: none; margin: 0; padding: 0; }
+.story-chapter {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: calc(2 * var(--spine-gap));
+  align-content: start;
+  align-items: start;
+  min-height: 86svh;
+  padding-block: 16svh 10svh;
+}
+.story-period, .story-copy { grid-row: 1; min-width: 0; }
+.story-copy { grid-column: 1; justify-self: end; width: min(100%, 410px); }
+.story-period { grid-column: 2; margin-top: .4rem; }
+.story-chapter:nth-child(even) .story-copy { grid-column: 2; justify-self: start; }
+.story-chapter:nth-child(even) .story-period { grid-column: 1; text-align: right; }
+
+.story-period, .story-academic, .story-education-summary, .story-closing {
+  color: var(--muted-foreground);
+  font-size: 12px;
+}
+.story-copy h3 {
+  font: 400 clamp(36px, 5vw, 68px)/1.02 var(--font-display), Georgia, serif;
+  letter-spacing: -.035em;
+  overflow-wrap: break-word;
+}
+.story-copy > p { margin-top: 12px; color: var(--muted-foreground); }
+.story-education-summary { white-space: pre-line; }
+.story-links { display: flex; flex-wrap: wrap; gap: 4px 16px; list-style: none; padding: 0; margin: 10px 0 0; }
+.story-links .text-link, .story-links .text-link:hover { gap: 12px; color: var(--accent); transition: none; }
+.story-chapter:focus-within :is(.story-copy, .story-period) { opacity: 1 !important; transform: none !important; }
+
+.story-node {
+  position: absolute;
+  top: calc(16svh + .75rem);
+  left: var(--spine-x);
+  width: 0;
+  height: 0;
+}
+.journey-rail {
+  position: absolute;
+  inset-block: 0 calc(var(--bloom-height) * .1944);
+  left: var(--spine-x);
+  width: var(--spine-width);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.journey-rail svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.journey-spine { visibility: hidden; }
+[data-story-motion] .journey-spine { visibility: visible; }
+[data-story-motion] .journey-fallback { visibility: hidden; }
+.journey-rail, .journey-leaf, .journey-bloom { color: var(--accent); }
+.journey-rail path, .journey-leaf path, .journey-bloom path {
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.journey-rail path { fill: none; vector-effect: non-scaling-stroke; }
+.journey-spine path, .journey-bloom path { stroke-dasharray: 1; }
+.journey-leaf {
+  position: absolute;
+  width: var(--spine-width);
+  left: calc(var(--spine-width) / -2);
+  top: calc(var(--spine-width) / -2);
+  overflow: visible;
+  pointer-events: none;
+}
+.journey-leaf path { fill: var(--accent-secondary); transform-origin: 50% 50%; }
+.journey-bloom {
+  display: block;
+  position: relative;
+  width: var(--bloom-width);
+  height: var(--bloom-height);
+  margin: calc(var(--bloom-height) * -.65) 0 0 calc(var(--spine-x) - var(--bloom-width) / 2);
+  pointer-events: none;
+}
+.journey-bloom path { fill: var(--background); transform-origin: 50% 80.56%; }
+.story-closing { text-align: center; line-height: 1.5; margin: 12px 0 0; }
+
+@media (max-width: 1023px) {
+  .story-journey { --spine-x: 33px; --spine-width: 66px; --spine-gap: 72px; --bloom-width: 90px; }
+  .story-chapter {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+    min-height: 55svh;
+    padding: 10svh 0 7svh var(--spine-gap);
+  }
+  .story-node { top: calc(10svh + .75rem); }
+  .story-chapter .story-period, .story-chapter:nth-child(even) .story-period { grid-area: 1 / 1; text-align: left; }
+  .story-chapter .story-copy, .story-chapter:nth-child(even) .story-copy { grid-area: 2 / 1; justify-self: start; }
+  .story-copy h3 { font-size: clamp(32px, 6vw, 48px); }
+  .story-closing { text-align: left; padding-left: 8px; }
+}
+
+@media (max-width: 600px) {
+  .story .story-heading { padding-top: 36px; }
+  .story .story-heading h2 { font-size: clamp(34px, 8.5vw, 48px); }
+  .story .story-heading > p { font-size: 22px; }
+}

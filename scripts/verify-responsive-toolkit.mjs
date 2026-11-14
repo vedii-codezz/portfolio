@@ -30,7 +30,7 @@ try {
   await evaluate(`document.querySelector('.pengu-reaction').click()`);await delay(80);
   assert.ok(await evaluate(`getComputedStyle(document.querySelector('.pengu-reaction')).transform!=='none'`),'Pengu reaction animates');
   await scroll('#story');
-  assert.ok(await evaluate(`!!document.querySelector('.journey-rail svg') && !!document.querySelector('.education-content h3')`),'Journey art and education remain');
+  assert.ok(await evaluate(`!!document.querySelector('.journey-rail svg') && !!document.querySelector('[data-chapter="education"] h3')`),'Journey art and education remain');
   await scroll('#contact');
   assert.equal(await evaluate(`document.querySelector('.contact-email').getAttribute('href')`),'mailto:bedantikamondal28@gmail.com');
   await until(`[...document.querySelectorAll('#contact [data-contact-reveal]')].every(e=>getComputedStyle(e).opacity==='1')`);

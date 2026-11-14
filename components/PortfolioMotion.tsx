@@ -1,7 +1,6 @@
 "use client";
 
 import { fullMotionQuery } from "./motion-preference";
-import { storyEntrance } from "./story-motion";
 
 import { useEffect } from "react";
 import { gsap } from "gsap";
@@ -15,21 +14,6 @@ export function PortfolioMotion() {
     const media = gsap.matchMedia(document.getElementById("portfolio-content") ?? undefined);
     const start = () => {
       media.add(fullMotionQuery, () => {
-        // Match the botanical rail's scroll range. These entrances only play once,
-        // while the illustration remains freely reversible on its own timeline.
-        const education = gsap.from("[data-chapter='education'] :is(.education-date, .education-content)", { ...storyEntrance, paused: true });
-        const score = gsap.from(".education-score", { y: 12, opacity: 0, duration: .65, ease: "power2.out", clearProps: "transform,opacity", paused: true });
-        let educationShown = false;
-        let scoreShown = false;
-        const revealStory = (progress: number) => {
-          if (progress >= .48 && !educationShown) { educationShown = true; education.play(); }
-          if (progress >= .72 && !scoreShown) { scoreShown = true; score.play(); }
-        };
-        ScrollTrigger.create({ trigger: ".journey-rail",
-          start: () => `clamp(top ${Math.round(window.innerHeight * .84)}px)`,
-          end: () => `clamp(bottom ${Math.round(Math.min(window.innerHeight * .3, 220))}px)`,
-          invalidateOnRefresh: true, onUpdate: self => revealStory(self.progress), onRefresh: self => revealStory(self.progress),
-        });
         gsap.from("[data-stack-category]", {
           y: 20, opacity: 0, duration: .6, stagger: .08, ease: "power2.out",
           clearProps: "transform,opacity",

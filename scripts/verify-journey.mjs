@@ -5,26 +5,22 @@ import ts from 'typescript';
 import { createRequire } from 'node:module';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import * as motionPreference from '../components/motion-preference.ts';
-const require=createRequire(import.meta.url);
-const helper={exports:{}};vm.createContext(helper);
-vm.runInContext(ts.transpileModule(fs.readFileSync('components/journey-motion.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText,helper);
-const points=[{x:140,y:310},{x:120,y:500},{x:140,y:714}];
-for(const [progress,x,y] of [[0,140,310],[1,140,714],[.25,130,405],[-1,140,310],[2,140,714]]) {
-  const point=helper.exports.journeyPoint(points,progress);
-  assert.equal(point.x,x);assert.equal(point.y,y);
+import { nodeProgress, vineThrough } from '../components/journey-motion.ts';
+
+assert.equal(vineThrough(50, 300, [60, 180], 20), 'M50 0C70 20 70 40 50 60C30 100 30 140 50 180C70 220 70 260 50 300');
+const straight = { getPointAtLength: length => ({ x: 0, y: length }) };
+for (const y of [0, 10, 50, 75, 100]) {
+  assert.ok(Math.abs(nodeProgress(straight, 100, y) - y / 100) < .00001);
 }
-const context={
-  exports:{},
-  require(name) {
-    if (name === './journey-motion') return helper.exports;
-    if (name === './motion-preference') return motionPreference;
-    return require(name);
-  },
-};
-vm.createContext(context);vm.runInContext(ts.transpileModule(fs.readFileSync('components/LotusJourney.tsx','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText,context);
-const markup=renderToStaticMarkup(React.createElement(context.exports.LotusJourney));
-assert.equal((markup.match(/class="journey-traveler"/g)||[]).length,2);
-assert.equal((markup.match(/transform="translate\(140 310\)"/g)||[]).length,2,'Both variants author the marker at the vine origin, never SVG origin');
-assert.ok(markup.includes('journey-flower')&&markup.includes('journey-vine'),'Compact flower and vine render independently');
-console.log('Journey checks passed: marker start/end/interpolation/reverse clamping and SSR mobile/desktop origins.');
+
+const context = { exports: {}, require: createRequire(import.meta.url) };
+const source = fs.readFileSync('components/LotusJourney.tsx', 'utf8');
+const { outputText } = ts.transpileModule(source, {
+  compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX },
+});
+vm.runInNewContext(outputText, context);
+const markup = renderToStaticMarkup(React.createElement(context.exports.LotusJourney));
+assert.equal((markup.match(/data-story-petal/g) ?? []).length, 9);
+assert.match(markup, /aria-hidden="true"/);
+assert.match(renderToStaticMarkup(React.createElement(context.exports.JourneyLeaf, { index: 5 })), /data-story-leaf/);
+console.log('Journey checks passed: path through chapter nodes, length mapping and static lotus artwork.');

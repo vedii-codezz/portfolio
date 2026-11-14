@@ -1,7 +1,23 @@
-export function journeyPoint(points: readonly { x: number; y: number }[], progress: number) {
-  const index = Math.min(1, Math.max(0, progress)) * (points.length - 1);
-  const a = points[Math.floor(index)];
-  const b = points[Math.min(points.length - 1, Math.floor(index) + 1)];
-  const fraction = index % 1;
-  return { x: a.x + (b.x - a.x) * fraction, y: a.y + (b.y - a.y) * fraction };
+export function vineThrough(x: number, height: number, nodes: readonly number[], reach: number) {
+  let previous = 0;
+  const segments = [...nodes, height].map((y, index) => {
+    const bend = index % 2 === 0 ? reach : -reach;
+    const gap = (y - previous) / 3;
+    const segment = `C${x + bend} ${previous + gap} ${x + bend} ${y - gap} ${x} ${y}`;
+    previous = y;
+    return segment;
+  });
+  return `M${x} 0${segments.join("")}`;
+}
+
+// Y increases monotonically along the spine, so binary search the length at a node.
+export function nodeProgress(path: Pick<SVGPathElement, "getPointAtLength">, length: number, y: number) {
+  let low = 0;
+  let high = length;
+  for (let i = 0; i < 20; i++) {
+    const mid = (low + high) / 2;
+    if (path.getPointAtLength(mid).y < y) low = mid;
+    else high = mid;
+  }
+  return (low + high) / (2 * length);
 }
