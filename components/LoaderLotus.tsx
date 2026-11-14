@@ -95,6 +95,11 @@ export function LoaderLotus() {
           gsap.set(content, { opacity: 0 });
           gsap.set(petals, { xPercent: -50, yPercent: -100, transformOrigin: "50% 97%" });
           const timeline = gsap.timeline({ onComplete: finish });
+          // Keep every stage of the bloom while revealing the portrait sooner
+          // on phones, where it is the largest contentful paint candidate.
+          if (window.matchMedia("(max-width: 767px) and (pointer: coarse)").matches) {
+            timeline.timeScale(1.8);
+          }
 
           petals.forEach((petal, i) => gsap.set(petal, {
             rotation: lotusPetals[i].angle * .13,
