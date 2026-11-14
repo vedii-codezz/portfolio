@@ -212,6 +212,9 @@ export default function AccordionGallery({
           ...(on ? {} : { x: 0, y: 0 }),
         });
         to(panel.querySelector(".ag-tint"), { opacity: on ? 0 : TINT_OFF });
+        panel.querySelectorAll("[data-gallery-caption]").forEach(caption => {
+          to(caption, { opacity: on ? 1 : 0 });
+        });
         to(panel.querySelector(".ag-ring"), { opacity: on ? RING_ON : 0 });
         to(panel.querySelector(".ag-label--rest"), { opacity: on ? 0 : 1 });
         to(panel.querySelector(".ag-label--on"), {
