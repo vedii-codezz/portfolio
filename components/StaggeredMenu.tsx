@@ -1,5 +1,7 @@
 "use client";
 
+import { reducedMotionQuery } from "./motion-preference";
+
 import { useEffect, useId, useRef, useState, type CSSProperties, type MouseEvent, type ReactNode } from "react";
 import Image from "next/image";
 import { gsap } from "gsap";
@@ -45,7 +47,7 @@ export default function StaggeredMenu({
   useEffect(() => {
     const shell = root.current;
     if (!shell) return;
-    const media = matchMedia("(prefers-reduced-motion: reduce)");
+    const media = matchMedia(reducedMotionQuery);
     let desiredOpen = false;
     let release: (() => void) | null = null;
     let disposed = false;

@@ -1,5 +1,7 @@
 "use client";
 
+import { fullMotionQuery } from "./motion-preference";
+
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -64,7 +66,7 @@ export function LotusJourney() {
     if (!rail) return;
     gsap.registerPlugin(ScrollTrigger);
     const media = gsap.matchMedia();
-    const start = () => media.add({ compact: "(max-width:1199px)", motion: "(prefers-reduced-motion: no-preference)" }, context => {
+    const start = () => media.add({ compact: "(max-width:1199px)", motion: fullMotionQuery }, context => {
       if (!context.conditions?.motion) return;
       const svgs = Array.from(rail.querySelectorAll<SVGSVGElement>(context.conditions.compact ? ".journey-flower, .journey-vine" : ".journey-desktop"));
       const find = (selector: string) => svgs.flatMap(svg => Array.from(svg.querySelectorAll<SVGElement>(selector)));

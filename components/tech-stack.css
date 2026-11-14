@@ -18,7 +18,7 @@
 .toolkit-alpona-back { opacity:calc(var(--alpona-opacity) * .65); }
 /* Solid surface beneath copy masks ornament strokes, including at narrow widths. */
 .toolkit-flip-title,.toolkit-flip-back h3,.toolkit-flip-technologies { background:var(--stack-surface); }
-.toolkit-flip-meta { display:flex; justify-content:space-between; align-items:center; font-size:10px; letter-spacing:.12em; opacity:.8; }
+.toolkit-flip-meta { display:flex; justify-content:space-between; align-items:center; font-size:10px; letter-spacing:.12em; }
 .toolkit-flip-mark { font-family:var(--font-display),Georgia,serif; font-size:23px; line-height:1; }
 .toolkit-flip-title { position:relative; z-index:1; margin:auto 0; padding:30px 0; font-family:var(--font-display),Georgia,serif; font-weight:400; font-size:clamp(36px,3.5vw,48px); line-height:1.06; letter-spacing:-.025em; overflow-wrap:break-word; }
 .toolkit-flip-cue { margin:0; padding-top:18px; border-top:1px solid color-mix(in srgb,var(--stack-ink) 24%,transparent); font-size:9px; letter-spacing:.1em; }

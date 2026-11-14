@@ -18,7 +18,7 @@ export default function Home() {
       <div id="portfolio-content">
       <a className="skip-link" href="#main">Skip to content</a>
       <StaggeredMenu items={menuItems} socialItems={socialItems} />
-      <main id="main">
+      <main id="main" tabIndex={-1}>
         <Hero />
         <SelectedWork />
         <MinorProjects />

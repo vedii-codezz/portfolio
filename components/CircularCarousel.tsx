@@ -1,5 +1,7 @@
 "use client";
 
+import { reducedMotionQuery } from "./motion-preference";
+
 import { useEffect, useRef, useLayoutEffect, type CSSProperties, type ReactNode } from "react";
 import { angularFocus, advanceRing, bendTiles, clamp, nearestProject, releaseTarget, ringRadius, wrapDegrees, type RingMotion } from "./carousel-geometry";
 
@@ -41,7 +43,7 @@ export default function CircularCarousel({ items, selectedIndex, onChange, onPre
   useEffect(() => {
     const shell = root.current, surface = stage.current, view = camera.current, cylinder = ring.current;
     if (!shell || !surface || !view || !cylinder || !count) return;
-    const media = matchMedia("(prefers-reduced-motion: reduce)");
+    const media = matchMedia(reducedMotionQuery);
     const motion: RingMotion = { angle: 0, velocity: 0, target: null };
     let press: Press | null = null;
     let raf = 0, last = 0, wheelTimer = 0;
@@ -258,16 +260,20 @@ export default function CircularCarousel({ items, selectedIndex, onChange, onPre
   }, [cardWidth, gap, momentum, depthFade, curve, tilt, parallax, stretch, intro, count, tileCount]);
 
   return <div ref={root} className="circular-carousel" role="region" aria-roledescription="carousel" aria-label="Selected projects"
-    style={{ "--carousel-width": `${cardWidth}px`, "--carousel-perspective": `${perspective}px`, "--carousel-radius": `${cornerRadius}px`, "--carousel-inner": innerShade } as CSSProperties}>
-    <p className="carousel-instruction" id="carousel-help">Drag to explore · or use the arrows</p>
-    <div ref={stage} className="carousel-stage" tabIndex={0} aria-label="Project gallery" aria-describedby="carousel-help"
-      onKeyDown={event => {
+    style={{ "--carousel-width": `${cardWidth}px`, "--carousel-perspective": `${perspective}px`, "--carousel-radius": `${cornerRadius}px`, "--carousel-inner": innerShade } as CSSProperties}
+    onKeyDown={event => {
+      if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
         if (["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
           event.preventDefault();
+          if (event.target instanceof HTMLElement && event.target.matches(".carousel-card")) {
+            stage.current?.focus({ preventScroll: true });
+          }
           if (event.key === "Home" || event.key === "End") controller.current?.focus(event.key === "Home" ? 0 : count - 1);
           else controller.current?.step(event.key === "ArrowRight" ? 1 : -1);
         }
       }}>
+    <p className="carousel-instruction" id="carousel-help">Drag to explore · or use the arrows</p>
+    <div ref={stage} className="carousel-stage" tabIndex={0} aria-label="Project gallery" aria-describedby="carousel-help">
       <div ref={camera} className="carousel-camera"><div ref={ring} className="carousel-cylinder">
         {items.map((item, index) => <div key={item.id} ref={element => { cards.current[index] = element; }}
           className="carousel-card" data-active={index === active} data-project={item.id} role="button" tabIndex={index === active ? 0 : -1} aria-pressed={index === active}
@@ -277,7 +283,7 @@ export default function CircularCarousel({ items, selectedIndex, onChange, onPre
           onFocus={() => previewItem(index)} onBlur={() => previewItem(null)}
           onKeyDown={event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); controller.current?.focus(index); } }}
           onClick={() => controller.current?.focus(index)}>
-          <div className="carousel-tiled-surface" aria-hidden="true">
+          <div className="carousel-tiled-surface" aria-hidden="true" inert>
             {Array.from({ length: tileCount }, (_, tile) => <div className="carousel-art-tile" data-art-tile key={tile} data-edge={tile === 0 ? "first" : tile === tileCount - 1 ? "last" : undefined}>
               <div className="carousel-tile-frame"><div className="carousel-tile-art">{item.artwork}</div><div className="carousel-tile-shade" /></div>
             </div>)}
@@ -294,6 +300,6 @@ export default function CircularCarousel({ items, selectedIndex, onChange, onPre
       <div className="carousel-dots">{items.map((item, index) => <button type="button" key={item.id} aria-label={`Show ${item.title}`} aria-current={index === active ? "true" : undefined} onClick={() => controller.current?.focus(index)}><span /></button>)}</div>
       <button type="button" aria-label="Next project" onClick={() => controller.current?.step(1)}>→</button>
     </div>
-    <span className="carousel-sr" role="status" aria-live="polite" aria-atomic="true">{items[active]?.title}, project {active + 1} of {count}</span>
+    <span className="carousel-sr" role="status" aria-live="polite" aria-atomic="true">Project {active + 1} of {count}: {items[active]?.title}</span>
   </div>;
 }

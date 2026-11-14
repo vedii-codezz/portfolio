@@ -1,5 +1,7 @@
 "use client";
 
+import { fullMotionQuery } from "./motion-preference";
+
 import { useEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -11,7 +13,7 @@ export function PortfolioMotion() {
     // from inside its own GSAP context.
     const media = gsap.matchMedia(document.getElementById("portfolio-content") ?? undefined);
     const start = () => {
-      media.add("(prefers-reduced-motion: no-preference)", () => {
+      media.add(fullMotionQuery, () => {
         // Match the botanical rail's scroll range. These entrances only play once,
         // while the illustration remains freely reversible on its own timeline.
         const education = gsap.from(".education-date, .education-content", { y: 20, opacity: 0, duration: .75, stagger: .1, ease: "power2.out", clearProps: "transform,opacity", paused: true });
@@ -70,7 +72,7 @@ export function PortfolioMotion() {
           stage?.removeEventListener("pointerleave", leave);
         };
       });
-      media.add("(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)", () => {
+      media.add(`(hover: hover) and (pointer: fine) and ${fullMotionQuery}`, () => {
         const cleanups: (() => void)[] = [];
         const follow = (surface: HTMLElement, target: HTMLElement, amount: number, tilt = false) => {
           let bounds = surface.getBoundingClientRect();
@@ -104,7 +106,7 @@ export function PortfolioMotion() {
         if (email) follow(email, email, 6);
         return () => cleanups.forEach(cleanup => cleanup());
       });
-      media.add("(min-width: 901px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)", () => {
+      media.add(`(min-width: 901px) and (hover: hover) and (pointer: fine) and ${fullMotionQuery}`, () => {
         gsap.to(".portrait-image", { yPercent: 4, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 1 } });
 
       });

@@ -1,5 +1,7 @@
 "use client";
 
+import { reducedMotionQuery, fullMotionQuery } from "./motion-preference";
+
 import { useEffect, useId, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { gsap } from "gsap";
 import "./flip-card.css";
@@ -47,7 +49,7 @@ export default function FlipCard({ front, back, label = "Card", axis = "y", flip
   useEffect(() => {
     const node = rotor.current;
     if (!node) return;
-    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const media = window.matchMedia(reducedMotionQuery);
     const rotation = axis === "y" ? { rotationY: flipped ? 180 : 0 } : { rotationX: flipped ? 180 : 0 };
     const duration = Math.max(.3, Math.min(1.3, .8 * Math.sqrt(170 / Math.max(1, stiffness)) * Math.max(1, damping) / 20));
     const tween = gsap.to(node, { ...rotation, duration: media.matches ? 0 : duration,
@@ -75,7 +77,7 @@ export default function FlipCard({ front, back, label = "Card", axis = "y", flip
 
   return <div className="flip-card" style={style} data-flipped={flipped} data-axis={axis}
     onPointerMove={event => {
-      if (event.pointerType !== "mouse" || !window.matchMedia("(hover: hover) and (prefers-reduced-motion: no-preference)").matches) return;
+      if (event.pointerType !== "mouse" || !window.matchMedia(`(hover: hover) and ${fullMotionQuery}`).matches) return;
       const node = surface.current;
       if (!node) return;
       const bounds = event.currentTarget.getBoundingClientRect();

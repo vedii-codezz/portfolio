@@ -1,4 +1,6 @@
 "use client";
+
+import { fullMotionQuery } from "./motion-preference";
 import { useLayoutEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { carouselDescriptions, type Project } from "@/data/projects";
@@ -6,7 +8,7 @@ export function ProjectDetailsPanel({ project, index }: { project: Project; inde
   const panel = useRef<HTMLElement>(null);
   useLayoutEffect(() => {
     const media = gsap.matchMedia();
-    media.add("(prefers-reduced-motion: no-preference)", () => {
+    media.add(fullMotionQuery, () => {
       gsap.fromTo(panel.current?.querySelectorAll("[data-detail]") ?? [],
         { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: .3, stagger: .035, ease: "power2.out", clearProps: "transform,opacity" });
     });

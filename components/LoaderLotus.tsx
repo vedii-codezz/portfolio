@@ -8,6 +8,7 @@ import { heroEntrance } from "./hero-entrance";
 import { FloralCoverage } from "./FloralCoverage";
 import { floralCoverage, floralPose } from "./floral-coverage";
 import { observeLoaderViewport, readLoaderViewport } from "./loader-viewport";
+import { reducedMotionQuery } from "./motion-preference";
 import "./loader-lotus.css";
 
 export function LoaderLotus() {
@@ -17,7 +18,7 @@ export function LoaderLotus() {
 
   useEffect(() => {
     const restore = (event: PageTransitionEvent) => {
-      if (!event.persisted) return;
+      if (!event.persisted || window.matchMedia(reducedMotionQuery).matches) return;
       delete document.documentElement.dataset.lotusRecovery;
       document.documentElement.dataset.lotusLoading = "pending";
       setFinished(false);
@@ -53,7 +54,7 @@ export function LoaderLotus() {
       root.dataset.lotusLoading = "revealing";
       window.dispatchEvent(new Event("portfolio:reveal"));
     };
-    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const media = window.matchMedia(reducedMotionQuery);
     const started = Date.now();
     const onKey = (event: KeyboardEvent) => { if (event.key === "Escape") finish(); };
     const onVisibility = () => { if (!document.hidden && Date.now() - started > 3900) finish(); };
@@ -74,7 +75,7 @@ export function LoaderLotus() {
       media.removeEventListener("change", finish);
     };
 
-    if (!shouldPlayLotus() || root.dataset.lotusLoading !== "pending") {
+    if (media.matches || !shouldPlayLotus()) {
       skippedFrame = requestAnimationFrame(finish);
     } else {
       // A fresh root-page intro reveals the hero, even if the browser restored
@@ -94,17 +95,6 @@ export function LoaderLotus() {
           gsap.set(content, { opacity: 0 });
           gsap.set(petals, { xPercent: -50, yPercent: -100, transformOrigin: "50% 97%" });
           const timeline = gsap.timeline({ onComplete: finish });
-
-          if (media.matches) {
-            petals.forEach((petal, i) => gsap.set(petal, { rotation: lotusPetals[i].angle, rotationX: lotusPetals[i].tilt, scale: lotusPetals[i].size }));
-            timeline.to("[data-loader-lotus]", { opacity: 1, duration: .15 })
-              .call(reveal, [], .18)
-              .to("[data-loader-backdrop]", { opacity: 0, duration: .3 }, .18)
-              .to("[data-loader-veil]", { opacity: 0, duration: .3 }, .18)
-              .to(content, { opacity: 1, duration: .3 }, .18)
-              .to(overlay, { opacity: 0, duration: .2 }, .3);
-            return;
-          }
 
           petals.forEach((petal, i) => gsap.set(petal, {
             rotation: lotusPetals[i].angle * .13,

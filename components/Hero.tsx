@@ -21,8 +21,8 @@ export function Hero() {
         <div className="hero-copy">
           <p className="hero-greeting" data-hero-reveal>Hey, I&apos;m Bedantika.</p>
           <h1 id="hero-name" aria-label="Bedantika Mondal">
-            <span className="headline-mask"><span data-headline><TextScramble as="span" speed={0.05} trigger={ready ? undefined : false}>Bedantika</TextScramble></span></span>
-            <span className="headline-mask surname"><span data-headline><TextScramble as="span" speed={0.05} trigger={ready ? undefined : false}>Mondal</TextScramble><span className="name-period">.</span></span></span>
+            <span aria-hidden="true" className="headline-mask"><span data-headline><TextScramble as="span" speed={0.05} trigger={ready ? undefined : false}>Bedantika</TextScramble></span></span>
+            <span aria-hidden="true" className="headline-mask surname"><span data-headline><TextScramble as="span" speed={0.05} trigger={ready ? undefined : false}>Mondal</TextScramble><span className="name-period">.</span></span></span>
           </h1>
           <div className="hero-intro">
             <span className="tiny-cross" aria-hidden="true">✳</span>

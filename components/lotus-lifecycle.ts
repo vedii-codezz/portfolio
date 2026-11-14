@@ -1,3 +1,5 @@
+import { reducedMotionQuery } from "./motion-preference";
+
 export function shouldPlayLotus() {
   return document.documentElement.dataset.lotusLoading === "pending";
 }
@@ -24,6 +26,7 @@ export function completeLotus() {
 // Recovery does not depend on React or the animation bundle hydrating successfully.
 export const lotusBootstrap = `(function(){
   var root=document.documentElement;
+  if(matchMedia('${reducedMotionQuery}').matches){root.dataset.lotusLoading='complete';return}
   root.dataset.lotusRecovery='armed';
   root.dataset.lotusLoading='pending';
   setTimeout(function(){

@@ -1,5 +1,7 @@
 "use client";
 
+import { reducedMotionQuery } from "../motion-preference";
+
 import { useEffect, useRef, useState, type HTMLAttributes } from "react";
 import styles from "./text-scramble.module.css";
 
@@ -23,7 +25,7 @@ export function TextScramble({ children, as: Tag = "span", speed = .01, trigger 
     const element = root.current;
     const text = output.current;
     if (!trigger || !element || !text) return;
-    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const media = window.matchMedia(reducedMotionQuery);
     let frame = 0;
     let started: number | undefined;
     let previous = -1;
