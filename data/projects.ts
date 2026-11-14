@@ -1,5 +1,7 @@
 type ProjectImage = { src: string; alt: string; width: number; height: number };
 
+export type ProjectLink = { label: string; href: string; ariaLabel: string };
+
 export type Project = {
   order: number;
   objectPosition?: string;
@@ -10,10 +12,16 @@ export type Project = {
   month?: string;
   name: string; category: string; title: string; description: string;
   technologies: readonly string[]; github: string; live: string;
+  links?: readonly ProjectLink[];
 };
 
 export const finoraDate = { year: 2026, month: "July" } as const;
 const finoraSummary = "Hackathon team project, 2nd runner-up. I produced the demo video and pitch.";
+export const finoraResultsLink = {
+  label: "Results",
+  href: "https://www.kaggle.com/competitions/gemma-ai-buildathon/hackathon-winners",
+  ariaLabel: "Results (Kaggle, opens in a new tab)",
+} satisfies ProjectLink;
 
 // Public project facts verified against the adjacent original portfolio and project source.
 // See docs/implementation.md for source locations. Visual studies are not screenshots.
@@ -26,6 +34,14 @@ export const projects: readonly Project[] = [
     description: finoraSummary,
     technologies: ["Python", "Multi-agent orchestration", "Language models"],
     github: "https://github.com/Adhirajsingh2507/Error-404-Not-Found", live: "https://vibeforge-cyan.vercel.app/",
+    links: [
+      {
+        label: "Competition writeup",
+        href: "https://www.kaggle.com/competitions/gemma-ai-buildathon/writeups/multi-agent-personal-cfo",
+        ariaLabel: "Competition writeup (Kaggle, opens in a new tab)",
+      },
+      finoraResultsLink,
+    ],
   },
   {
     slug: "veyra", kind: "Solo", name: "VEYRA", category: "CREATIVE FRONTEND / FINANCIAL VISUALIZATION",

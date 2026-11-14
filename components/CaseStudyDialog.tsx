@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useLayoutEffect, useRef } from "react";
 import { caseStudies, type CaseStudy } from "@/data/case-studies";
+import { projects } from "@/data/projects";
 import styles from "./case-study-dialog.module.css";
 
 export default function CaseStudyDialog({ slug, onClose }: { slug: CaseStudy["slug"]; onClose: () => void }) {
@@ -10,6 +11,7 @@ export default function CaseStudyDialog({ slug, onClose }: { slug: CaseStudy["sl
   const closeButton = useRef<HTMLButtonElement>(null);
   const lastLink = useRef<HTMLAnchorElement>(null);
   const study = caseStudies.find(project => project.slug === slug);
+  const extraLinks = projects.find(project => project.slug === slug)?.links ?? [];
 
   useLayoutEffect(() => {
     const element = dialog.current;
@@ -80,7 +82,13 @@ export default function CaseStudyDialog({ slug, onClose }: { slug: CaseStudy["sl
           <h3 id="case-study-links">Links</h3>
           <div className={styles.links}>
             <a href={study.links.demo} target="_blank" rel="noopener noreferrer" aria-label="Live Demo (opens in new tab)">Live Demo ↗</a>
-            <a ref={lastLink} href={study.links.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub Source (opens in new tab)">GitHub Source ↗</a>
+            <a ref={extraLinks.length ? undefined : lastLink} href={study.links.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub Source (opens in new tab)">GitHub Source ↗</a>
+            {extraLinks.map((link, index) => (
+              <a key={link.href} ref={index === extraLinks.length - 1 ? lastLink : undefined}
+                href={link.href} target="_blank" rel="noopener noreferrer" aria-label={link.ariaLabel}>
+                {link.label} <span aria-hidden="true">↗</span>
+              </a>
+            ))}
           </div>
         </section>
       </article>

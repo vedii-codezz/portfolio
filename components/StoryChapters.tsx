@@ -63,7 +63,10 @@ export function StoryChapters({ chapters, illustration, children }: {
                               trigger.current = event.currentTarget;
                               setCaseStudy(link.caseStudy);
                             }}>{link.label} <span aria-hidden="true">↗</span></a>
-                        ) : <a className="text-link" href={link.href}>{link.label}</a>}
+                        ) : (
+                          <a className="text-link" href={link.href} aria-label={link.ariaLabel}
+                            target="_blank" rel="noopener noreferrer">{link.label} <span aria-hidden="true">↗</span></a>
+                        )}
                       </li>
                     ))}
                   </ul>}

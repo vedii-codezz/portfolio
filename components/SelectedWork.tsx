@@ -64,7 +64,14 @@ export function SelectedWork() {
           <div className="work-gallery-skeleton" aria-hidden="true" />
           <noscript>
             <ol className="work-gallery-links">
-              {ordered.map(project => <li key={project.slug}><a href={project.live}>{project.name}</a> · {project.title}</li>)}
+              {ordered.map(project => (
+                <li key={project.slug}>
+                  <a href={project.live}>{project.name}</a> · {project.title}
+                  {project.links?.map(link => (
+                    <span key={link.href}> · <a href={link.href} target="_blank" rel="noopener noreferrer" aria-label={link.ariaLabel}>{link.label}</a></span>
+                  ))}
+                </li>
+              ))}
             </ol>
           </noscript>
           <div className="work-gallery-scroll-space" style={{ height: `${(items.length - 1) * scrollPerItem * 100}vh` }} aria-hidden="true" />

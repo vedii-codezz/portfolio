@@ -1,8 +1,8 @@
-import type { Project } from "./projects";
+import { finoraResultsLink, type Project } from "./projects";
 
 type StoryLink =
   | { label: string; caseStudy: Project["slug"] }
-  | { label: string; href: string };
+  | { label: string; href: string; ariaLabel?: string };
 
 export type StoryChapter = {
   id: string;
@@ -35,7 +35,7 @@ const chapters: readonly StoryChapter[] = [
     period: "July 24–25, 2026",
     summary: "A buildathon on Google DeepMind's Gemma models. Our team placed 2nd runner-up with Finora, and I produced the demo video and the pitch.",
     details: [],
-    links: [{ label: "Finora", caseStudy: "finora" }],
+    links: [{ label: "Finora", caseStudy: "finora" }, finoraResultsLink],
     status: "published",
   },
   {
