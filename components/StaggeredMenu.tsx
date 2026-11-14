@@ -9,7 +9,7 @@ import { Brand } from "./Brand";
 import { ThemeControl } from "./ThemeControl";
 import "./staggered-menu.css";
 
-type MenuItem = { label: string; ariaLabel?: string; link: string };
+type MenuItem = { label: string; ariaLabel?: string; link: string; newTab?: boolean };
 type Props = {
   position?: "right" | "left";
   items: readonly MenuItem[];
@@ -196,9 +196,11 @@ export default function StaggeredMenu({
       <div className="staggered-layer staggered-layer-one" data-menu-layer aria-hidden="true" />
       <div className="staggered-layer staggered-layer-two" data-menu-layer aria-hidden="true" />
       <div ref={panel} className="staggered-panel" data-menu-layer>
-        <p className="staggered-eyebrow">A LITTLE EXPLORING <span aria-hidden="true">/ 01—06</span></p>
+        <p className="staggered-eyebrow">A LITTLE EXPLORING <span aria-hidden="true">/ 01—{String(items.length).padStart(2, "0")}</span></p>
         <nav className="staggered-links" aria-label="Main navigation">
-          {items.map((item, index) => <a key={item.link} href={item.link} aria-label={item.ariaLabel} onClick={event => followAnchor(event, item.link)}>
+          {items.map((item, index) => <a key={item.link} href={item.link} aria-label={item.ariaLabel}
+            target={item.newTab ? "_blank" : undefined} rel={item.newTab ? "noopener noreferrer" : undefined}
+            onClick={event => followAnchor(event, item.link)}>
             {displayItemNumbering && <span className="menu-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>}
             <span className="menu-label-mask"><span data-menu-label>{item.label}</span></span>
             <span className="menu-link-arrow" aria-hidden="true">↗</span>

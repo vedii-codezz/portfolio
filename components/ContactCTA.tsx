@@ -1,3 +1,4 @@
+import { resume } from "@/data/site";
 import { Lotus } from "./Brand";
 
 export function ContactCTA() {
@@ -25,6 +26,10 @@ export function ContactCTA() {
         <a data-contact-reveal href="https://www.linkedin.com/in/bedantikamondal2007/" target="_blank" rel="noopener noreferrer">
           <span className="mono contact-platform">LinkedIn<span className="sr-only"> (opens in a new tab)</span></span>
           <span className="contact-social-action">Connect With Me <span aria-hidden="true">↗</span></span>
+        </a>
+        <a data-contact-reveal href={resume.link} aria-label={resume.ariaLabel} target="_blank" rel="noopener noreferrer">
+          <span className="mono contact-platform">PDF</span>
+          <span className="contact-social-action">{resume.label} <span aria-hidden="true">↗</span></span>
         </a>
       </div>
     </section>

@@ -1,3 +1,5 @@
+import { resume } from "./site";
+
 export const menuItems = [
   { label: "Home", ariaLabel: "Go to home", link: "#home" },
   { label: "Selected Work", ariaLabel: "Explore selected projects", link: "#work" },
@@ -5,6 +7,7 @@ export const menuItems = [
   { label: "My Story", ariaLabel: "Read my story", link: "#story" },
   { label: "Tech Stack", ariaLabel: "Explore my technologies", link: "#stack" },
   { label: "Contact", ariaLabel: "Get in touch", link: "#contact" },
+  resume,
 ] as const;
 
 export const socialItems = [
