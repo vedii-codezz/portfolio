@@ -58,7 +58,7 @@ const chapters: readonly StoryChapter[] = [
     title: "Techno India University",
     period: "August 2025 – August 2029 (expected)",
     summary: "B.Tech in Computer Science with Specialization in Artificial Intelligence",
-    details: ["A FOUNDATION IN INTELLIGENCE.\nA FUTURE OPEN TO POSSIBILITY."],
+    details: [],
     links: [],
     status: "published",
     academicStanding: {
@@ -137,16 +137,6 @@ const chapters: readonly StoryChapter[] = [
     links: [{ label: "TODO", href: "TODO" }],
     status: "draft",
   },
-  ...projects.filter(project => project.kind === "Solo").sort((a, b) => a.order - b.order).map((project): StoryChapter => ({
-    id: project.slug,
-    kind: "projects",
-    title: project.name,
-    period: project.month ? `${project.month} ${project.year}` : String(project.year),
-    summary: project.title,
-    details: [],
-    links: [{ label: project.name, caseStudy: project.slug }],
-    status: "published",
-  })),
 ];
 
 export const publishedChapters = chapters.filter(chapter => chapter.status === "published");
