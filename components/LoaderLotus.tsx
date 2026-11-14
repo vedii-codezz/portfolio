@@ -1,5 +1,6 @@
 "use client";
 
+import { lotusEase } from "./lotus-ease";
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { LoaderPetals, lotusPetals } from "./LoaderPetals";
@@ -108,16 +109,16 @@ export function LoaderLotus() {
             scaleY: .83 * lotusPetals[i].size,
           }));
           timeline.to("[data-loader-lotus]", { opacity: 1, y: -3, duration: .65, ease: "sine.out" }, 0)
-            .to("[data-lotus-aura]", { opacity: .75, scale: 1.15, duration: 1.5, ease: "sine.inOut" }, .3);
+            .to("[data-lotus-aura]", { opacity: .75, scale: 1.15, duration: 1.5, ease: lotusEase }, .3);
           petals.forEach((petal, i) => {
             const shape = lotusPetals[i];
             timeline.to(petal, {
               rotation: shape.angle, rotationX: shape.tilt,
               scaleX: shape.size, scaleY: shape.size,
-              duration: 1.25, ease: "sine.inOut",
+              duration: 1.25, ease: lotusEase,
             }, .35 + Math.floor(i / 7) * .12 + Math.abs(shape.angle) * .0015);
           });
-          timeline.to("[data-loader-lotus]", { scale: 1.32, y: -12, duration: .85, ease: "sine.inOut" }, 1.65)
+          timeline.to("[data-loader-lotus]", { scale: 1.32, y: -12, duration: .85, ease: lotusEase }, 1.65)
             .to("[data-lotus-heart]", { opacity: .8, scale: 1.2, duration: .6 }, 1.5)
             .to("[data-lotus-aura], [data-lotus-heart]", { opacity: 0, duration: .32 }, 2.28);
 
@@ -150,28 +151,28 @@ export function LoaderLotus() {
           gsap.set(panels, { opacity: 0 });
           panels.forEach((panel, i) => {
             const delay = [0, .035, .012, .055, .025, .065, .018, .045][i];
-            timeline.to(panel, { opacity: 1, duration: .3, ease: "sine.inOut" }, 1.94 + delay)
-              .to(coverage[i], { expansion: 1, duration: .68, ease: "sine.inOut", onUpdate: () => renderPanel(i) }, 1.94 + delay)
+            timeline.to(panel, { opacity: 1, duration: .3, ease: lotusEase }, 1.94 + delay)
+              .to(coverage[i], { expansion: 1, duration: .68, ease: lotusEase, onUpdate: () => renderPanel(i) }, 1.94 + delay)
               // The camera keeps approaching while the layers begin to part.
               .to(coverage[i], { expansion: 1.06, duration: .7, ease: "sine.out", onUpdate: () => renderPanel(i) }, 2.62 + delay)
-              .to(coverage[i], { exit: 1, duration: .92, ease: "sine.inOut", onUpdate: () => renderPanel(i) }, 2.66 + delay);
+              .to(coverage[i], { exit: 1, duration: .92, ease: lotusEase, onUpdate: () => renderPanel(i) }, 2.66 + delay);
           });
-          timeline.to("[data-floral-underlay]", { opacity: 1, duration: .2, ease: "sine.inOut" }, 2.4)
-            .to("[data-floral-underlay]", { opacity: 0, duration: .44, ease: "sine.inOut" }, 2.7);
+          timeline.to("[data-floral-underlay]", { opacity: 1, duration: .2, ease: lotusEase }, 2.4)
+            .to("[data-floral-underlay]", { opacity: 0, duration: .44, ease: lotusEase }, 2.7);
           petals.forEach((petal, i) => {
             const shape = lotusPetals[i];
             const angle = shape.angle * Math.PI / 180;
             const at = 2.16 + (i % 3) * .028;
             // Keep the original bloom orientation; avoid re-fanning into a pinwheel.
             timeline.to(petal, { scaleX: shape.size * 2.65, scaleY: shape.size * 2.65,
-              rotationX: 0, duration: .72, ease: "sine.inOut" }, at)
-              .to(petal, { opacity: 0, duration: .3, ease: "sine.inOut" }, 2.55 + (i % 3) * .025);
+              rotationX: 0, duration: .72, ease: lotusEase }, at)
+              .to(petal, { opacity: 0, duration: .3, ease: lotusEase }, 2.55 + (i % 3) * .025);
             timeline.to(foregroundMotion[i], { x: Math.sin(angle) * .35, y: -Math.cos(angle) * .35,
-              duration: .8, ease: "sine.inOut", onUpdate: () => renderForeground(i) }, at);
+              duration: .8, ease: lotusEase, onUpdate: () => renderForeground(i) }, at);
           });
           timeline.call(reveal, [], 2.58)
-            .to("[data-loader-backdrop]", { opacity: 0, duration: .24, ease: "sine.inOut" }, 2.56)
-            .to("[data-loader-veil]", { opacity: 0, duration: .24, ease: "sine.inOut" }, 2.58)
+            .to("[data-loader-backdrop]", { opacity: 0, duration: .24, ease: lotusEase }, 2.56)
+            .to("[data-loader-veil]", { opacity: 0, duration: .24, ease: lotusEase }, 2.58)
             .add(heroEntrance(content, false).timeScale(1.25), 3.02)
             .to(overlay, { opacity: 0, duration: .1 }, 3.7);
         }, overlay);

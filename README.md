@@ -21,7 +21,7 @@ The website pairs **Instrument Serif** with **Newsreader**, with **Noto Serif Be
 
 - **An opening bloom.** A custom animated lotus loader hands off to the GSAP hero reveal. Once the name has appeared, Bedantika and Mondal scramble and settle; hovering either word plays its own scramble again.
 - **Two moods, one little world.** Bloom and After Dark share a lotus theme switch, alongside a staggered navigation menu.
-- **A gallery with a curve.** Five artwork-led projects sit on a 3D circular carousel. Drag, use the arrows, or navigate with the keyboard; hover previews update a separate details panel. The selected artwork stays sharp while its neighbors soften.
+- **Selected Work.** Five projects appear in two opposing parallax rows on desktop and in a vertical stack on smaller screens. Each card opens the project case study.
 - **A tiny friend.** Pengu has a playful place in the playground, with a click reaction and links to the virtual-pet project.
 - **A growing story.** The botanical Lotus Journey accompanies my education, with scroll-linked motion and section reveals.
 - **Four cards, four compositions.** The Tech Stack flips in 3D with tilt and a subtle glare. Paisley, semicircle, radial floral, and lotus-border ornaments each have their own alpona-inspired arrangement. Desktop gets one four-card row, tablet gets two columns, and mobile gets one.
@@ -97,7 +97,7 @@ Then use `npm start` to serve the production build on port 3000.
 
 ```text
 app/          Page composition, fonts, metadata, and global theme styles
-components/   Hero, navigation, carousel, Pengu, journey, and flip cards
+components/   Hero, navigation, Selected Work, Pengu, journey, and flip cards
 data/         Project records, education, navigation, and personal toolkit
 public/       Local images and the static README artwork
 scripts/      Browser regression checks and focused verification scripts

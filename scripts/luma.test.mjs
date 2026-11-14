@@ -7,8 +7,7 @@ import { createRequire } from 'node:module';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import ts from 'typescript';
-import { projects, carouselDescriptions } from '../data/projects.ts';
-import { nearestProject, ringRadius, advanceRing } from '../components/carousel-geometry.ts';
+import { projects } from '../data/projects.ts';
 const require=createRequire(import.meta.url);
 const cache=new Map();
 function load(file){
@@ -22,33 +21,15 @@ function load(file){
  };
  vm.runInNewContext(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText,{exports,require:localRequire});return exports;
 }
-test('Selected Work renders five labeled artwork cards with one initial details panel',()=>{
+test('Selected Work renders two linked views and one semantic heading per project',()=>{
  const html=renderToStaticMarkup(createElement(load('components/SelectedWork.tsx').SelectedWork));
- assert.equal((html.match(/class="carousel-card"/g)??[]).length,5);
- assert.equal((html.match(/class="carousel-art-tile"/g)??[]).length,15);
- assert.equal((html.match(/class="carousel-art-tile carousel-art-back"/g)??[]).length,15);
- assert.equal((html.match(/class="carousel-tiled-surface" aria-hidden="true" inert=""/g)??[]).length,5);
- assert.equal((html.match(/<a /g)??[]).length,2);
- assert.equal((html.match(/class="carousel-kind mono"/g)??[]).length,5);
- assert.match(html,/aria-label="Read Finora case study"/);
- assert.ok(!html.includes('<dialog'));
+ assert.equal((html.match(/class="work-card"/g)??[]).length,10);
+ assert.equal((html.match(/<h3/g)??[]).length,5);
+ assert.equal((html.match(/tabindex="-1" aria-hidden="true"/g)??[]).length,5);
  assert.match(html,/class="work-count">05/);
- assert.deepEqual([...html.matchAll(/data-project="([^"]+)"/g)].map(match=>match[1]),projects.map(project=>project.slug));
- assert.ok(!html.includes('carousel-editorial'));
- assert.ok(html.includes(carouselDescriptions.finora));
- for(const [index,project] of projects.entries()) {
-  const details=renderToStaticMarkup(createElement(load('components/ProjectDetailsPanel.tsx').ProjectDetailsPanel,{project,index}));
-  assert.ok(details.includes(project.live)); assert.ok(details.includes(project.github));
-  assert.ok(details.includes(carouselDescriptions[project.slug]));
+ for(const project of projects) {
+  assert.equal(html.split('href="'+project.live+'"').length-1,2);
+  assert.equal(html.split(project.title).length-1,2);
+  assert.ok(project.media.length<=2);
  }
-});
-test('five-card ring advances through LUMA and wraps to Finora without geometry changes',()=>{
- assert.equal(projects.length,5);
- assert.equal(nearestProject(-288,projects.length),4);
- assert.equal(nearestProject(-360,projects.length),0);
- assert.equal(nearestProject(72,projects.length),4);
- assert.ok(Math.abs(ringRadius(projects.length,276,25)-239.5282)<.001);
- let state={angle:-288,velocity:0,target:-360};
- for(let i=0;i<240;i++)state=advanceRing(state,1/60);
- assert.equal(state.angle,-360);assert.equal(nearestProject(state.angle,projects.length),0);
 });

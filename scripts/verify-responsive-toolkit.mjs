@@ -2,7 +2,6 @@ import { spawn } from 'node:child_process';
 import fs from 'node:fs/promises';
 import assert from 'node:assert/strict';
 import { techStack } from '../data/tech-stack.ts';
-import { projects } from '../data/projects.ts';
 
 const output=process.env.PORTFOLIO_REVIEW_OUTPUT;
 const matrixOnly=process.argv.includes('--matrix-only');
@@ -26,37 +25,6 @@ try {
   await until(`document.documentElement?.dataset.lotusLoading==='complete'&&!!document.querySelector('.toolkit-flip-grid')`);
   await evaluate('document.fonts.ready');await delay(1900);
   if(!matrixOnly&&!controlsOnly) {
-  await scroll('#work');
-  const idle=()=>until(`document.querySelector('.circular-carousel').dataset.motion==='idle'`);
-  await idle();
-  assert.equal(await evaluate(`document.querySelectorAll('.carousel-card').length`),5);
-  assert.ok(await evaluate(`document.querySelector('.carousel-cylinder').style.transform.includes('rotateY')`));
-  const bends=await evaluate(`[...document.querySelectorAll('.carousel-card:first-child .carousel-art-tile:not([data-back])')].map(e=>e.style.transform)`);
-  assert.ok(bends.length===8&&bends[0].includes('rotateY(-')&&!bends[7].includes('rotateY(-'),'Curved artwork strips preserved');
-  for(const project of projects) {
-    await evaluate(`document.querySelector('[aria-label="Show ${project.name}"]').click()`);await idle();await delay(400);
-    assert.equal(await evaluate(`document.querySelector('#work-project-title').textContent`),project.name);
-    assert.deepEqual(await evaluate(`[...document.querySelectorAll('.project-details-links a')].map(a=>a.href)`),[project.live,project.github]);
-    assert.ok(await evaluate(`Number.parseFloat(document.querySelector('.carousel-card[data-active="true"]').style.getPropertyValue('--focus-blur'))===0`),'Selected art sharp');
-    assert.ok(await evaluate(`[...document.querySelectorAll('.carousel-card[data-active="false"]')].some(c=>Number.parseFloat(c.style.getPropertyValue('--focus-blur'))>0)`),'Neighbor art softened');
-  }
-  await evaluate(`document.querySelector('[aria-label="Next project"]').click()`);await idle();
-  assert.equal(await evaluate(`document.querySelector('.carousel-card[data-active="true"]').dataset.project`),projects[0].slug,'Forward wrap');
-  await evaluate(`document.querySelector('[aria-label="Previous project"]').click()`);await idle();
-  assert.equal(await evaluate(`document.querySelector('.carousel-card[data-active="true"]').dataset.project`),projects[4].slug,'Reverse wrap');
-  const drag=await evaluate(`(()=>{const r=document.querySelector('.carousel-stage').getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height*.25}})()`);
-  const beforeDrag=await evaluate(`document.querySelector('.carousel-cylinder').style.transform`);
-  await send('Input.dispatchMouseEvent',{type:'mousePressed',...drag,button:'left',clickCount:1});
-  for(let i=1;i<=6;i++){await send('Input.dispatchMouseEvent',{type:'mouseMoved',x:drag.x-i*25,y:drag.y,buttons:1});await delay(25);}
-  await send('Input.dispatchMouseEvent',{type:'mouseReleased',x:drag.x-150,y:drag.y,button:'left',clickCount:1});await idle();
-  assert.notEqual(await evaluate(`document.querySelector('.carousel-cylinder').style.transform`),beforeDrag,'Physical drag and snap');
-  const selected=await evaluate(`document.querySelector('.carousel-card[data-active="true"]').dataset.project`);
-  const neighbor=await evaluate(`(()=>{for(const tile of document.querySelectorAll('.carousel-card[data-active="false"] .carousel-art-tile:not([data-back])')){const r=tile.getBoundingClientRect(),x=r.x+r.width/2,y=r.y+r.height*.25,card=document.elementFromPoint(x,y)?.closest('.carousel-card');if(card?.dataset.active==='false')return {x,y,id:card.dataset.project}}return null})()`);
-  assert.ok(neighbor,'Neighbor target is visible');
-  await send('Input.dispatchMouseEvent',{type:'mouseMoved',x:neighbor.x,y:neighbor.y});await delay(500);
-  assert.equal(await evaluate(`document.querySelector('#work-project-title').textContent`),projects.find(p=>p.slug===neighbor.id).name,'Hover preview updates detail panel');
-  await send('Input.dispatchMouseEvent',{type:'mouseMoved',x:0,y:0});await delay(400);
-  assert.equal(await evaluate(`document.querySelector('#work-project-title').textContent`),projects.find(p=>p.slug===selected).name,'Hover exit restores selected details');
   await scroll('#playground');
   assert.ok(await evaluate(`document.querySelector('.pengu-character img')?.naturalWidth>0`),'Pengu artwork rendered');
   await evaluate(`document.querySelector('.pengu-reaction').click()`);await delay(80);
@@ -66,7 +34,7 @@ try {
   await scroll('#contact');
   assert.equal(await evaluate(`document.querySelector('.contact-email').getAttribute('href')`),'mailto:bedantikamondal28@gmail.com');
   await until(`[...document.querySelectorAll('#contact [data-contact-reveal]')].every(e=>getComputedStyle(e).opacity==='1')`);
-  console.log('PASS full-site interactions: five projects and exact links, ring curvature, sharp/blur treatment, wraps, drag/snap, hover preview, Pengu reaction, Journey artwork, education and contact reveal.');
+  console.log('PASS full-site interactions: Pengu reaction, Journey artwork, education and contact reveal.');
   }
   for(const [width,height] of (controlsOnly?[]:[[320,640],[390,844],[768,1024],[1024,768],[1280,800],[1440,900],[1920,1080]])) {
     await send('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:width<650});
@@ -78,13 +46,12 @@ try {
         if(width===390||width===1440){const shot=await send('Page.captureScreenshot',{format:'png'});await fs.writeFile(`${output}/${width}-${theme}-${section.replace(/[^a-z]/g,'')}.png`,Buffer.from(shot.data,'base64'));}
       }
       await scroll('.toolkit-flip-grid');
-      const layout=await evaluate(`(()=>{const grid=document.querySelector('.toolkit-flip-grid');return {columns:getComputedStyle(grid).gridTemplateColumns.split(' ').length,overflow:document.documentElement.scrollWidth>innerWidth,cards:[...document.querySelectorAll('.flip-card')].map(c=>({width:c.offsetWidth,height:c.offsetHeight})),sections:[...document.querySelectorAll('main section,.site-footer')].map(e=>({id:e.id||e.className,left:e.getBoundingClientRect().left,right:e.getBoundingClientRect().right})),titles:[...document.querySelectorAll('.toolkit-flip-title')].map(e=>({text:e.textContent,overflow:e.scrollWidth>e.clientWidth+1})),ornaments:[...document.querySelectorAll('.toolkit-alpona')].map(e=>({hidden:e.getAttribute('aria-hidden'),pointer:getComputedStyle(e).pointerEvents})),carousel:document.querySelector('.circular-carousel').dataset.motion}})()`);
+      const layout=await evaluate(`(()=>{const grid=document.querySelector('.toolkit-flip-grid');return {columns:getComputedStyle(grid).gridTemplateColumns.split(' ').length,overflow:document.documentElement.scrollWidth>innerWidth,cards:[...document.querySelectorAll('.flip-card')].map(c=>({width:c.offsetWidth,height:c.offsetHeight})),sections:[...document.querySelectorAll('main section,.site-footer')].map(e=>({id:e.id||e.className,left:e.getBoundingClientRect().left,right:e.getBoundingClientRect().right})),titles:[...document.querySelectorAll('.toolkit-flip-title')].map(e=>({text:e.textContent,overflow:e.scrollWidth>e.clientWidth+1})),ornaments:[...document.querySelectorAll('.toolkit-alpona')].map(e=>({hidden:e.getAttribute('aria-hidden'),pointer:getComputedStyle(e).pointerEvents}))}})()`);
       assert.equal(layout.columns,width>=1200?4:width>=650?2:1);
       assert.equal(layout.overflow,false,`${width} ${theme}: no page overflow`);
       assert.ok(layout.cards.every(c=>c.height===layout.cards[0].height),`Equal card heights: ${JSON.stringify(layout.cards)}`);
       assert.ok(layout.titles.every(t=>!t.overflow),JSON.stringify(layout.titles));
       assert.ok(layout.ornaments.every(o=>o.hidden==='true'&&o.pointer==='none'));
-      assert.equal(layout.carousel,'paused','Offscreen carousel animation is paused');
       assert.deepEqual(await evaluate(`[...document.querySelectorAll('.toolkit-flip-technologies li')].map(e=>e.textContent)`),techStack.flatMap(c=>c.technologies));
       for(const face of ['front','back']) {
         if(face==='back') {

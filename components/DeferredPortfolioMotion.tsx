@@ -6,8 +6,12 @@ import { fullMotionQuery } from "./motion-preference";
 
 const PortfolioMotion = dynamic(() => import("./PortfolioMotion").then(module => module.PortfolioMotion), { ssr: false });
 
+const SelectedWorkMotion = dynamic(() => import("./SelectedWorkMotion").then(module => module.SelectedWorkMotion), { ssr: false });
+
 export function DeferredPortfolioMotion() {
   const [enabled, setEnabled] = useState(false);
+
+  const [workEnabled, setWorkEnabled] = useState(false);
 
   useEffect(() => {
     const media = window.matchMedia(fullMotionQuery);
@@ -25,10 +29,14 @@ export function DeferredPortfolioMotion() {
       cancel();
       if (!media.matches) {
         setEnabled(false);
+        setWorkEnabled(false);
         return;
       }
       if (work && !nearWork && !portraitParallax.matches) return;
-      const enable = () => setEnabled(true);
+      const enable = () => {
+        setEnabled(true);
+        if (nearWork) setWorkEnabled(true);
+      };
       idle = supportsIdleCallback ? window.requestIdleCallback(enable, { timeout: 1200 }) : window.setTimeout(enable, 200);
     };
     const observer = new IntersectionObserver(([entry]) => {
@@ -49,5 +57,5 @@ export function DeferredPortfolioMotion() {
     };
   }, []);
 
-  return enabled ? <PortfolioMotion /> : null;
+  return <>{enabled && <PortfolioMotion />}{workEnabled && <SelectedWorkMotion />}</>;
 }
