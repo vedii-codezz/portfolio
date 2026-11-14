@@ -78,7 +78,7 @@ try {
   }
   if (output) await mkdir(output, { recursive: true });
   await send('Page.enable');
-  for (const width of [1280,1440,1920,768,360]) {
+  for (const width of (process.argv.includes('--keyboard-only') ? [] : [1280,1440,1920,768,360])) {
     await viewport(width);
     await navigate('width=' + width);
     await until(`document.documentElement.dataset.lotusLoading === 'complete'`);
@@ -137,7 +137,7 @@ try {
         assert.ok(await evaluate(`(() => {
           const work = document.getElementById('work');
           const next = work.nextElementSibling.getBoundingClientRect();
-          return next.top >= work.getBoundingClientRect().bottom - 1 && next.top < innerHeight;
+          return Math.abs(next.top - work.getBoundingClientRect().bottom) <= 1;
         })()`), 'Next section follows the pin');
       } else {
         assert.equal(await evaluate(`document.querySelector('#work .pin-spacer') !== null`), false);
@@ -162,6 +162,14 @@ try {
   await scroll(`document.getElementById('work').offsetTop - 150`);
   await until(`document.querySelectorAll('.ag-panel').length === 5`);
   await evaluate(`document.querySelector('.ag-panel').focus()`);
+  await scroll(`(() => {
+    const root = document.querySelector('.ag-root');
+    const spacer = root.parentElement;
+    return Math.ceil(spacer.getBoundingClientRect().top + scrollY + (root.offsetHeight - innerHeight) / 2 + 20);
+  })()`);
+  await delay(900);
+  await evaluate(`document.querySelector('.ag-panel').focus({preventScroll:true})`);
+  assert.ok(await evaluate(`document.activeElement === document.querySelector('.ag-panel')`));
   await key('Tab',9);
   await select(1);
   await key('ArrowRight',39);
@@ -172,13 +180,20 @@ try {
   await select(0);
   assert.ok(await evaluate(`document.activeElement.matches(':focus-visible') && getComputedStyle(document.activeElement).outlineStyle === 'solid'`));
   await key('Enter',13);
-  await until(`document.querySelector('dialog[open] h2')?.textContent === 'Finora'`);
+  await until(`document.querySelector('dialog[open] h2')?.textContent === 'FINORA'`);
   await key('Escape',27);
   await until(`!document.querySelector('dialog[open]') && document.activeElement === document.querySelector('.ag-panel')`);
 
   await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
   await until(`!document.querySelector('#work .pin-spacer')`);
-  await evaluate(`document.querySelectorAll('.ag-panel')[4].click()`);
+  await evaluate(`document.querySelector('.ag-track').scrollIntoView({block:'center',behavior:'instant'})`);
+  const point = await evaluate(`(() => {
+    const rect = document.querySelectorAll('.ag-panel')[4].getBoundingClientRect();
+    return {x:rect.left + rect.width/2, y:rect.top + rect.height/2};
+  })()`);
+  await send('Input.dispatchMouseEvent', { type: 'mousePressed', button: 'left', clickCount: 1, ...point });
+  await send('Input.dispatchMouseEvent', { type: 'mouseReleased', button: 'left', clickCount: 1, ...point });
+  assert.ok(await evaluate(`!document.querySelector('dialog[open]')`), 'First click only expands');
   await select(4);
   assert.ok(await evaluate(`[...document.querySelectorAll('.ag-panel')].every(panel => getComputedStyle(panel).opacity === '1')`));
   console.log('PASS keyboard, focus ring, modal Escape/focus restoration, reduced motion');

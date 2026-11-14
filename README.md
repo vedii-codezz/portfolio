@@ -21,7 +21,7 @@ The website pairs **Instrument Serif** with **Newsreader**, with **Noto Serif Be
 
 - **An opening bloom.** A custom animated lotus loader hands off to the GSAP hero reveal. Once the name has appeared, Bedantika and Mondal scramble and settle; hovering either word plays its own scramble again.
 - **Two moods, one little world.** Bloom and After Dark share a lotus theme switch, alongside a staggered navigation menu.
-- **Selected Work.** Five projects appear in two opposing parallax rows on desktop and in a vertical stack on smaller screens. Each card opens the project case study.
+- **Selected Work.** Five projects open in sequence as you scroll through the desktop accordion. On smaller screens, select a panel to expand it. Select the expanded panel to open its case study.
 - **A tiny friend.** Pengu has a playful place in the playground, with a click reaction and links to the virtual-pet project.
 - **A growing story.** The botanical Lotus Journey accompanies my education, with scroll-linked motion and section reveals.
 - **Four cards, four compositions.** The Tech Stack flips in 3D with tilt and a subtle glare. Paisley, semicircle, radial floral, and lotus-border ornaments each have their own alpona-inspired arrangement. Desktop gets one four-card row, tablet gets two columns, and mobile gets one.
