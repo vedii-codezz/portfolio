@@ -21,15 +21,15 @@ function load(file){
  };
  vm.runInNewContext(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText,{exports,require:localRequire});return exports;
 }
-test('Selected Work renders two linked views and one semantic heading per project',()=>{
+test('Selected Work reserves the gallery and renders project links without JavaScript',()=>{
  const html=renderToStaticMarkup(createElement(load('components/SelectedWork.tsx').SelectedWork));
- assert.equal((html.match(/class="work-card"/g)??[]).length,10);
- assert.equal((html.match(/<h3/g)??[]).length,5);
- assert.equal((html.match(/tabindex="-1" aria-hidden="true"/g)??[]).length,5);
+ assert.match(html,/class="work-gallery-skeleton"/);
  assert.match(html,/class="work-count">05/);
+ assert.deepEqual(projects.map(project=>project.order),[1,2,3,4,5]);
+ const fallback=html.match(/<noscript>(.*?)<\/noscript>/)?.[1];
+ assert.ok(fallback);
  for(const project of projects) {
-  assert.equal(html.split('href="'+project.live+'"').length-1,2);
-  assert.equal(html.split(project.title).length-1,2);
-  assert.ok(project.media.length<=2);
+  assert.ok(fallback.includes(project.live));
+  assert.ok(fallback.includes(project.title));
  }
 });

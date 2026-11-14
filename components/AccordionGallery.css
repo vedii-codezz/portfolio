@@ -1,0 +1,213 @@
+/* AccordionGallery
+   Colors/radius/gap/height come from CSS variables set by the component
+   (--ag-accent, --ag-overlay, --ag-text, --ag-radius, --ag-gap, --ag-height).
+   Fonts are inherited from the page. To use your display face for titles,
+   set --ag-title-font on .ag-root (or any ancestor). */
+
+.ag-root {
+  width: 100%;
+  color: var(--ag-text);
+}
+
+.ag-header {
+  margin-bottom: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+.ag-track {
+  display: flex;
+  gap: var(--ag-gap);
+  height: var(--ag-height);
+  width: 100%;
+}
+
+.ag-track.is-vertical {
+  flex-direction: column;
+}
+
+.ag-panel {
+  position: relative;
+  display: block;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: var(--ag-radius);
+  background: var(--ag-overlay);
+  color: var(--ag-text);
+  text-decoration: none;
+  cursor: pointer;
+  isolation: isolate;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ag-panel:focus-visible {
+  outline: 2px solid var(--ag-accent);
+  outline-offset: 3px;
+}
+
+/* Image layer: oversized by --ag-bleed so parallax never exposes an edge. */
+.ag-media {
+  position: absolute;
+  inset: calc(var(--ag-bleed) * -1);
+  z-index: 0;
+}
+
+.ag-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Initial (pre-JS) state. GSAP takes over with inline styles afterwards. */
+.has-gray .ag-panel:not(.is-active) .ag-img {
+  filter: grayscale(1);
+}
+
+.ag-tint {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: var(--ag-overlay);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.ag-panel.is-active .ag-tint {
+  opacity: 0;
+}
+
+.ag-shade {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(to top, var(--ag-overlay), transparent 62%);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.ag-ring {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px var(--ag-accent);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ag-panel.is-active .ag-ring {
+  opacity: 0.55;
+}
+
+/* Labels ---------------------------------------------------------------- */
+
+.ag-label {
+  position: absolute;
+  z-index: 3;
+  left: 1.1rem;
+  bottom: 1.1rem;
+  display: flex;
+  pointer-events: none;
+}
+
+.ag-index {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.7;
+}
+
+/* Collapsed label: reads bottom-to-top along the panel edge. */
+.ag-label--rest {
+  align-items: center;
+  gap: 0.6rem;
+  opacity: 1;
+}
+
+.is-horizontal .ag-label--rest {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+.ag-name {
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+/* Expanded label */
+.ag-label--on {
+  flex-direction: column;
+  gap: 0.3rem;
+  max-width: calc(100% - 2.2rem);
+  opacity: 0;
+}
+
+.ag-title {
+  font-family: var(--ag-title-font, inherit);
+  font-size: clamp(1.5rem, 2.6vw, 2.4rem);
+  line-height: 1.05;
+}
+
+.ag-meta {
+  font-size: 0.95rem;
+  line-height: 1.4;
+  opacity: 0.82;
+}
+
+.ag-panel.is-active .ag-label--rest {
+  opacity: 0;
+}
+
+.ag-panel.is-active .ag-label--on {
+  opacity: 1;
+}
+
+/* Arrow chip, top-right, only on the expanded panel */
+.ag-go {
+  position: absolute;
+  z-index: 3;
+  top: 1rem;
+  right: 1rem;
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1px solid color-mix(in srgb, var(--ag-text) 45%, transparent);
+  border-radius: 999px;
+  color: var(--ag-text);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ag-panel.is-active .ag-go {
+  opacity: 1;
+}
+
+/* Vertical orientation (also used on narrow screens) --------------------- */
+
+.is-vertical .ag-label--rest {
+  top: 50%;
+  bottom: auto;
+  transform: translateY(-50%);
+}
+
+.is-vertical .ag-label--rest .ag-name {
+  font-size: 0.9rem;
+}
+
+/* Accessibility ---------------------------------------------------------- */
+
+.ag-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
