@@ -75,11 +75,16 @@ export function StoryChapters({ chapters }: { chapters: readonly StoryChapter[] 
                   <p key={detail} className={chapter.kind === "education" ? "story-education-summary mono" : undefined}>{detail}</p>
                 ))}
                 {chapter.academicStanding && (
-                  <p className="story-academic mono">
-                    {chapter.academicStanding.currentTerm} · CGPA {chapter.academicStanding.cgpa}
-                    {chapter.academicStanding.sgpa.map(({ semester, value }) => ` · SGPA Semester ${semester}: ${value}`)}
-                    {" · As of "}{chapter.academicStanding.asOf}
-                  </p>
+                  <div className="story-academic mono">
+                    <p>{chapter.academicStanding.currentTerm}</p>
+                    <ul className="story-stats" role="list">
+                      <li>CGPA {chapter.academicStanding.cgpa}</li>
+                      {chapter.academicStanding.sgpa.map(({ semester, value }) => (
+                        <li key={semester}>SGPA Sem {semester} {value}</li>
+                      ))}
+                    </ul>
+                    <p>As of {chapter.academicStanding.asOf}</p>
+                  </div>
                 )}
                 {chapter.links.length > 0 && <ul className="story-links">
                   {chapter.links.map(link => (

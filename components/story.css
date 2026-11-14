@@ -37,6 +37,9 @@
   overflow-wrap: break-word;
 }
 .story-copy > p { margin-top: 12px; color: var(--muted-foreground); }
+.story-academic { display: grid; gap: 4px; margin-top: 12px; }
+.story-stats { display: flex; flex-wrap: wrap; gap: 4px 12px; list-style: none; margin: 0; padding: 0; }
+.story-stats li { white-space: nowrap; }
 .story-education-summary { white-space: pre-line; }
 .story-links { display: flex; flex-wrap: wrap; gap: 4px 16px; list-style: none; padding: 0; margin: 10px 0 0; }
 .story-links .text-link, .story-links .text-link:hover { gap: 12px; color: var(--accent); transition: none; }
