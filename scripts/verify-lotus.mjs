@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
+import * as motionPreference from '../components/motion-preference.ts';
 
 // A missing unlock, premature session marker, or lost inline style must fail these checks.
 const path = 'components/lotus-lifecycle.ts';
@@ -9,7 +10,7 @@ assert.ok(fs.existsSync(path), 'Lotus lifecycle controller must exist');
 const code = ts.transpileModule(fs.readFileSync(path, 'utf8'), {
   compilerOptions: { module: ts.ModuleKind.CommonJS },
 }).outputText;
-function environment({ seen = false, blocked = false, hash = '' } = {}) {
+function environment({ seen = false, blocked = false, hash = '', reducedMotion = false } = {}) {
   const root = { dataset: {} };
   const content = { inert: false, style: { opacity: '.8' }, attributes: new Map(),
     getAttribute(key) { return this.attributes.get(key) ?? null; },
@@ -18,7 +19,17 @@ function environment({ seen = false, blocked = false, hash = '' } = {}) {
   const events = [];
   const timers = [];
   let saved = seen ? 'done' : null;
-  const context = { exports: {}, document: { documentElement: root, getElementById: () => content },
+  const context = {
+    exports: {},
+    require(name) {
+      assert.equal(name, './motion-preference');
+      return motionPreference;
+    },
+    matchMedia(query) {
+      assert.equal(query, motionPreference.reducedMotionQuery);
+      return { matches: reducedMotion };
+    },
+    document: { documentElement: root, getElementById: () => content },
     location: { hash }, setTimeout: (fn, ms) => timers.push({ fn, ms }),
     window: { location: { hash }, dispatchEvent: e => events.push(e.type) },
     sessionStorage: { getItem() { if (blocked) throw Error('blocked'); return saved; },
@@ -27,6 +38,12 @@ function environment({ seen = false, blocked = false, hash = '' } = {}) {
   vm.createContext(context); vm.runInContext(code, context);
   return { api: context.exports, root, content, events, timers, context, saved: () => saved };
 }
+const reduced = environment({ reducedMotion: true });
+vm.runInContext(reduced.api.lotusBootstrap, reduced.context);
+assert.equal(reduced.root.dataset.lotusLoading, 'complete');
+assert.equal(reduced.api.shouldPlayLotus(), false);
+assert.equal(reduced.timers.length, 0);
+
 const first = environment();
 vm.runInContext(first.api.lotusBootstrap, first.context);
 assert.equal(first.api.shouldPlayLotus(), true);
