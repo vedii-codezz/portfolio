@@ -4,7 +4,7 @@ import pengu from "@/public/images/pengu.png";
 export function FunProjects() {
   return (
     <section className="playground section-pad" id="playground" aria-labelledby="playground-title">
-      <div className="section-eyebrow mono" data-reveal><span><i /> 05 / THE PLAYGROUND</span><span>A LITTLE LESS SERIOUS. A LOT MORE JOY.</span></div>
+      <div className="section-eyebrow mono" data-reveal><span><i /> 03 / THE PLAYGROUND</span><span>A LITTLE LESS SERIOUS. A LOT MORE JOY.</span></div>
       <div className="playground-heading">
         <h2 id="playground-title" data-play-reveal>Fun <em>Projects.</em></h2>
         <p data-play-reveal>Not everything needs to solve a serious problem. Some things are built just because they&apos;re fun.</p>
