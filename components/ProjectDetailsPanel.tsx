@@ -4,7 +4,7 @@ import { fullMotionQuery } from "./motion-preference";
 import { useLayoutEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { carouselDescriptions, type Project } from "@/data/projects";
-export function ProjectDetailsPanel({ project, index }: { project: Project; index: number }) {
+export function ProjectDetailsPanel({ project, index, onOpen }: { project: Project; index: number; onOpen: (element: HTMLButtonElement) => void }) {
   const panel = useRef<HTMLElement>(null);
   useLayoutEffect(() => {
     const media = gsap.matchMedia();
@@ -19,6 +19,7 @@ export function ProjectDetailsPanel({ project, index }: { project: Project; inde
     <div className="project-details-title"><h3 id="work-project-title" data-detail>{project.name}</h3></div>
     <p className="project-details-description" data-detail>{carouselDescriptions[project.slug]}</p>
     <div className="project-details-links" data-detail>
+      <button type="button" aria-haspopup="dialog" aria-label={`Read ${project.name} case study`} onClick={event => onOpen(event.currentTarget)}>Case Study <span aria-hidden="true">→</span></button>
       <a href={project.live} target="_blank" rel="noopener noreferrer" aria-label={`${project.name} Live Demo (opens in new tab)`}>Live Demo <span aria-hidden="true">↗</span></a>
       <a href={project.github} target="_blank" rel="noopener noreferrer" aria-label={`${project.name} GitHub Source (opens in new tab)`}>GitHub Source <span aria-hidden="true">↗</span></a>
     </div>

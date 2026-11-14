@@ -502,12 +502,14 @@ nav { font-size:16px; }
 .project-details h3 { font-family:var(--font-display),Georgia,serif; font-weight:400; font-size:clamp(64px,5.8vw,90px); line-height:1.04; letter-spacing:-.035em; overflow-wrap:anywhere; }
 .project-details-description { font-size:18px; line-height:1.6; max-width:34ch; min-height:116px; margin-top:18px; color:var(--muted-foreground); }
 .project-details-links { display:flex; flex-wrap:wrap; gap:12px 28px; margin-top:24px; }
-.project-details-links a { display:inline-flex; align-items:center; gap:12px; min-height:44px; font-size:17px; border-bottom:1px solid var(--border); text-decoration:none; }
-.project-details-links a:hover { color:var(--accent); border-color:var(--accent); }
-.project-details-links a:focus-visible { outline:2px solid var(--accent); outline-offset:5px; }
+.project-details-links :is(a,button) { display:inline-flex; align-items:center; gap:12px; min-height:44px; font-size:17px; border-bottom:1px solid var(--border); text-decoration:none; }
+.project-details-links button { cursor:pointer; }
+.project-details-links :is(a,button):hover { color:var(--accent); border-color:var(--accent); }
+.project-details-links :is(a,button):focus-visible { outline:2px solid var(--accent); outline-offset:5px; }
 .carousel-tile-frame { filter:blur(var(--focus-blur,0px)); opacity:var(--focus-opacity,1); }
 .carousel-card[data-active="true"] .carousel-tile-frame { box-shadow:0 12px 25px color-mix(in srgb,var(--foreground) 12%,transparent); }
 .carousel-card { cursor:pointer; }
+.carousel-kind { position:absolute; top:12px; right:12px; padding:3px 10px; border:1px solid var(--border); border-radius:999px; background:var(--surface); color:var(--foreground); transform:translateZ(16px); backface-visibility:hidden; pointer-events:none; }
 .carousel-card:focus-visible::after { content:""; position:absolute; inset:0; border:2px solid var(--accent); border-radius:var(--carousel-radius); transform:translateZ(2px); }
 @media (min-width:1024px) and (max-width:1439px) {
  .project-details h3 { font-size:64px; }
@@ -527,7 +529,7 @@ nav { font-size:16px; }
  .project-details h3 { font-size:clamp(48px,12vw,64px); }
  .project-details-label { font-size:11px; }
  .project-details-description { font-size:17px; min-height:110px; }
- .project-details-links a { font-size:16px; }
+ .project-details-links :is(a,button) { font-size:16px; }
  .carousel-instruction { font-size:12px; }
  .work-exhibition { gap:0; }
 }

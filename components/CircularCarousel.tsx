@@ -5,12 +5,13 @@ import { reducedMotionQuery } from "./motion-preference";
 import { useEffect, useRef, useLayoutEffect, type CSSProperties, type ReactNode } from "react";
 import { angularFocus, advanceRing, bendTiles, clamp, nearestProject, releaseTarget, ringRadius, wrapDegrees, type RingMotion } from "./carousel-geometry";
 
-export type CircularCarouselItem = { id: string; title: string; artwork: ReactNode };
+export type CircularCarouselItem = { id: string; title: string; kind?: "Solo" | "Team"; artwork: ReactNode };
 type Props = {
   items: readonly CircularCarouselItem[];
   selectedIndex: number;
   onChange: (index: number) => void;
   onPreview: (index: number | null) => void;
+  onActivate?: (index: number, element: HTMLDivElement) => void;
   cardWidth?: number; gap?: number; perspective?: number; momentum?: number;
   depthFade?: number; cornerRadius?: number; curve?: number; tilt?: number;
   parallax?: number; stretch?: number; innerShade?: number; intro?: "rise" | "none";
@@ -19,7 +20,7 @@ type Press = { id: number; x: number; y: number; origin: number; angle: number; 
 
 // The cylinder loops by rotation. Three strips approximate each curved face
 // while keeping a single interactive wrapper per project.
-export default function CircularCarousel({ items, selectedIndex, onChange, onPreview, cardWidth = 270, gap = 58, perspective = 2500, momentum = .6, depthFade = .35, cornerRadius = 12, curve = 1, tilt = -5, parallax = .3, stretch = .5, innerShade = .3, intro = "rise" }: Props) {
+export default function CircularCarousel({ items, selectedIndex, onChange, onPreview, onActivate, cardWidth = 270, gap = 58, perspective = 2500, momentum = .6, depthFade = .35, cornerRadius = 12, curve = 1, tilt = -5, parallax = .3, stretch = .5, innerShade = .3, intro = "rise" }: Props) {
   const root = useRef<HTMLDivElement>(null);
   const stage = useRef<HTMLDivElement>(null);
   const camera = useRef<HTMLDivElement>(null);
@@ -259,6 +260,11 @@ export default function CircularCarousel({ items, selectedIndex, onChange, onPre
     };
   }, [cardWidth, gap, momentum, depthFade, curve, tilt, parallax, stretch, intro, count, tileCount]);
 
+  const activate = (index: number, element: HTMLDivElement) => {
+    controller.current?.focus(index);
+    if (index === active) onActivate?.(index, element);
+  };
+
   return <div ref={root} className="circular-carousel" role="region" aria-roledescription="carousel" aria-label="Selected projects"
     style={{ "--carousel-width": `${cardWidth}px`, "--carousel-perspective": `${perspective}px`, "--carousel-radius": `${cornerRadius}px`, "--carousel-inner": innerShade } as CSSProperties}
     onKeyDown={event => {
@@ -277,12 +283,13 @@ export default function CircularCarousel({ items, selectedIndex, onChange, onPre
       <div ref={camera} className="carousel-camera"><div ref={ring} className="carousel-cylinder">
         {items.map((item, index) => <div key={item.id} ref={element => { cards.current[index] = element; }}
           className="carousel-card" data-active={index === active} data-project={item.id} role="button" tabIndex={index === active ? 0 : -1} aria-pressed={index === active}
-          aria-label={`${index + 1} of ${count}: ${item.title}`}
+          aria-label={`${index + 1} of ${count}: ${item.title}${item.kind ? `, ${item.kind}` : ""}${index === active && onActivate ? ", read case study" : ""}`}
+          aria-haspopup={index === active && onActivate ? "dialog" : undefined}
           onPointerEnter={event => { if (event.pointerType === "mouse") previewItem(index); }}
           onPointerLeave={event => { if (event.pointerType === "mouse" && preview.current === index) previewItem(null); }}
           onFocus={() => previewItem(index)} onBlur={() => previewItem(null)}
-          onKeyDown={event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); controller.current?.focus(index); } }}
-          onClick={() => controller.current?.focus(index)}>
+          onKeyDown={event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); if (!event.repeat) activate(index, event.currentTarget); } }}
+          onClick={event => activate(index, event.currentTarget)}>
           <div className="carousel-tiled-surface" aria-hidden="true" inert>
             {Array.from({ length: tileCount }, (_, tile) => <div className="carousel-art-tile" data-art-tile key={tile} data-edge={tile === 0 ? "first" : tile === tileCount - 1 ? "last" : undefined}>
               <div className="carousel-tile-frame"><div className="carousel-tile-art">{item.artwork}</div><div className="carousel-tile-shade" /></div>
@@ -291,7 +298,7 @@ export default function CircularCarousel({ items, selectedIndex, onChange, onPre
               <div className="carousel-tile-frame"><div className={`carousel-tile-art visual-${item.id}`} /><div className="carousel-tile-shade" /></div>
             </div>)}
           </div>
-
+          {item.kind && <span className="carousel-kind mono" aria-hidden="true">{item.kind}</span>}
         </div>)}
       </div></div>
     </div>
