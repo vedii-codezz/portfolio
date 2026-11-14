@@ -69,10 +69,17 @@ export function StoryChapters({ chapters }: { chapters: readonly StoryChapter[] 
               <p className="story-period mono">{chapter.period}</p>
               <div className="story-copy">
                 <h3>{chapter.title}</h3>
-                {chapter.kind !== "education" && <p>{chapter.summary}</p>}
-                {chapter.details.map(detail => <p key={detail}>{detail}</p>)}
-                {chapter.kind === "education" && <p className="story-education-summary mono">{chapter.summary}</p>}
-                {chapter.academicStanding && <p className="story-academic mono">{chapter.academicStanding.label} · CGPA {chapter.academicStanding.cgpa}</p>}
+                <p>{chapter.summary}</p>
+                {chapter.details.map(detail => (
+                  <p key={detail} className={chapter.kind === "education" ? "story-education-summary mono" : undefined}>{detail}</p>
+                ))}
+                {chapter.academicStanding && (
+                  <p className="story-academic mono">
+                    {chapter.academicStanding.currentTerm} · CGPA {chapter.academicStanding.cgpa}
+                    {chapter.academicStanding.sgpa.map(({ semester, value }) => ` · SGPA Semester ${semester}: ${value}`)}
+                    {" · As of "}{chapter.academicStanding.asOf}
+                  </p>
+                )}
                 {chapter.links.length > 0 && <ul className="story-links">
                   {chapter.links.map(link => (
                     <li key={link.label}>

@@ -1,3 +1,5 @@
+import { readdirSync, statSync } from "node:fs";
+import { join, parse } from "node:path";
 import { finoraResultsLink, projects, type Project } from "./projects";
 
 type StoryLink =
@@ -13,29 +15,82 @@ export type StoryChapter = {
   details: readonly string[];
   links: readonly StoryLink[];
   status: "published" | "draft";
-  academicStanding?: { label: string; cgpa: string };
+  academicStanding?: {
+    currentTerm: string;
+    cgpa: string;
+    sgpa: readonly { semester: number; value: string }[];
+    asOf: string;
+  };
 };
+
+function certificateLinks(basename: string, event: string): StoryLink[] {
+  const directory = join(process.cwd(), "public", "certificates");
+  let files;
+  try {
+    files = readdirSync(directory);
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return [];
+    throw error;
+  }
+
+  // TODO(verify): If no matching PDF or image is found, confirm the uploaded certificate's basename.
+  const file = files.find(filename => {
+    const { name, ext } = parse(filename);
+    return name === basename && /^\.(pdf|png|jpe?g|webp|gif|avif|svg)$/i.test(ext)
+      && statSync(join(directory, filename), { throwIfNoEntry: false })?.isFile();
+  });
+  if (!file) return [];
+
+  const format = parse(file).ext.toLowerCase() === ".pdf" ? "PDF" : "image";
+  return [{
+    label: "Certificate of participation",
+    href: `/certificates/${encodeURIComponent(file)}`,
+    ariaLabel: `Certificate of participation, ${event} (${format}, opens in a new tab)`,
+  }];
+}
+
+const finoraLinks = projects.find(project => project.slug === "finora")?.links ?? [];
 
 const chapters: readonly StoryChapter[] = [
   {
     id: "techno-india-btech",
     kind: "education",
     title: "Techno India University",
-    period: "August 2023 to August 2027 (expected)",
-    summary: "A FOUNDATION IN INTELLIGENCE.\nA FUTURE OPEN TO POSSIBILITY.",
-    details: ["B.Tech in Computer Science with Specialization in Artificial Intelligence"],
+    period: "August 2025 – August 2029 (expected)",
+    summary: "B.Tech in Computer Science with Specialization in Artificial Intelligence",
+    details: ["A FOUNDATION IN INTELLIGENCE.\nA FUTURE OPEN TO POSSIBILITY."],
     links: [],
     status: "published",
-    academicStanding: { label: "Currently pursuing", cgpa: "9.1" },
+    academicStanding: {
+      currentTerm: "Currently in 2nd year, 3rd semester",
+      cgpa: "9.1",
+      sgpa: [{ semester: 1, value: "9.16" }, { semester: 2, value: "9.04" }],
+      asOf: "November 2026",
+    },
   },
   {
     id: "finora",
     kind: "hackathon",
     title: "Build with Gemma: GDG TIU Buildathon",
     period: "July 24–25, 2026",
-    summary: "A buildathon on Google DeepMind's Gemma models. Our team placed 2nd runner-up with Finora, and I produced the demo video and the pitch.",
+    summary: "A buildathon on Google DeepMind's Gemma models. Our team, The Orchestrators, placed 2nd runner-up with Finora, and I produced the demo video and the pitch.",
     details: [],
-    links: [{ label: "Finora", caseStudy: "finora" }, finoraResultsLink],
+    links: [
+      { label: "Finora", caseStudy: "finora" },
+      finoraResultsLink,
+      ...finoraLinks.filter(link => link.label === "Competition writeup"),
+      ...certificateLinks("BedantikaMondal-Buildathon", "Build with Gemma: GDG TIU Buildathon"),
+    ],
+    status: "published",
+  },
+  {
+    id: "hackrit",
+    kind: "hackathon",
+    title: "Hackrit",
+    period: "September 10–11, 2026",
+    summary: "Participated in Hackrit, a 24-hour on-campus hackathon organised by GDG TIU.",
+    details: [],
+    links: certificateLinks("BedantikaMondal-Hackrit", "Hackrit"),
     status: "published",
   },
   // Waiting on Bedantika's input.
